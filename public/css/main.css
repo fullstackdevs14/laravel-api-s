@@ -1,0 +1,28 @@
+.sideMenu .space { margin-left: 100px}
+.sideMenu .panel-body { padding:0px }
+.sideMenu .panel-body table tr td { padding-left: 15px }
+.sideMenu .panel-body .table {margin-bottom: 0px }
+
+.pagination a { color: black !important; }
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover { border-color: #F5F5F5 !important; background-color: #F5F5F5 !important; color: black }
+
+.btn-file{
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file]{
+    position: absolute;
+        top: 0;
+        right:0;
+    min-height: 100%;
+    min-width: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background-color: white;
+    cursor: inherit;
+    display: block;
+}
