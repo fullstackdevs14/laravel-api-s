@@ -194,7 +194,7 @@ class ApplicationUserController extends Controller
             $filename = time() . '.jpeg';
             $data = explode(',', $data);
             $data = base64_decode($data[1]);
-            file_put_contents('app/public/uploads/application_users_img/' . $filename, $data);
+            file_put_contents(storage_path('app/public/uploads/application_users_img/' . $filename), $data);
         }
 
         /**
