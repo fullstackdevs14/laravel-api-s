@@ -75,3 +75,27 @@ Did you mean one of these?
 #4 /Users/thomasbourcy/Documents/Sipper/sipper_server/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #5 {main}
 "} 
+[2018-01-18 14:58:29] production.ERROR: Symfony\Component\Console\Exception\CommandNotFoundException: There are no commands defined in the "mangopay" namespace. in /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php:556
+Stack trace:
+#0 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(596): Symfony\Component\Console\Application->findNamespace('mangopay')
+#1 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(221): Symfony\Component\Console\Application->find('mangopay:mkdir')
+#2 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(148): Symfony\Component\Console\Application->doRun(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#3 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(122): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#4 /Users/thomasbourcy/Documents/Sipper/sipper_api/artisan(35): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#5 {main}  
+[2018-01-18 15:00:05] production.ERROR: Symfony\Component\Console\Exception\CommandNotFoundException: There are no commands defined in the "mangopay" namespace. in /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php:556
+Stack trace:
+#0 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(596): Symfony\Component\Console\Application->findNamespace('mangopay')
+#1 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(221): Symfony\Component\Console\Application->find('mangopay:mkdir')
+#2 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(148): Symfony\Component\Console\Application->doRun(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#3 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(122): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#4 /Users/thomasbourcy/Documents/Sipper/sipper_api/artisan(35): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#5 {main}  
+[2018-01-18 15:01:54] production.ERROR: Symfony\Component\Console\Exception\CommandNotFoundException: There are no commands defined in the "mangopay" namespace. in /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php:556
+Stack trace:
+#0 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(596): Symfony\Component\Console\Application->findNamespace('mangopay')
+#1 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(221): Symfony\Component\Console\Application->find('mangopay:mkdir')
+#2 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/symfony/console/Application.php(148): Symfony\Component\Console\Application->doRun(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#3 /Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(122): Symfony\Component\Console\Application->run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#4 /Users/thomasbourcy/Documents/Sipper/sipper_api/artisan(35): Illuminate\Foundation\Console\Kernel->handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+#5 {main}  

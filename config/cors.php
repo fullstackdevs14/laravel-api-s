@@ -11,7 +11,7 @@ return [
      |
      */
     'supportsCredentials' => false,
-    'allowedOrigins' => ['*', 'https::/vps.partenaire.sipper.pro'],
+    'allowedOrigins' => ['*', 'https::/vps.partenaire.sipper.pro', 'https::/partenaire.sipper.pro'],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
     'exposedHeaders' => [],
