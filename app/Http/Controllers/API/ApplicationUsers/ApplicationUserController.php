@@ -425,11 +425,10 @@ class ApplicationUserController extends Controller
             $filename = time() . '.jpeg';
             $data = explode(',', $data);
             $data = base64_decode($data[1]);
-            // TODO -- Quel est le chemin de la fonction file_put_contents ?
-            file_put_contents('app/public/uploads/application_users_img/' . $filename, $data);
+            file_put_contents(storage_path('app/public/uploads/application_users_img/' . $filename), $data);
         }
 
-        if (isset($request['base64']) AND $request['base64'] !== null OR $request->hasFile('picture')) {
+        if (isset($request['base64']) AND !empty($request['base64']) OR $request->hasFile('picture')) {
             File::delete(storage_path('app/public/uploads/application_users_img/' . $applicationUser->picture));
             $applicationUser->picture = $filename;
         }
