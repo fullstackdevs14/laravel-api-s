@@ -10,6 +10,7 @@
 
 @section('panel-body')
     {!! Html::RouteWithIcon('partner.invoices.generateLastMonth', 'Génèrer une facture pour le mois dernier (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
+    {!! Html::RouteWithIcon('partner.invoices.generateThisMonth', 'Génèrer une facture pour le mois en cours (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
 
     <br/>
     <br/>

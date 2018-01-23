@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderInfoTemp extends Model
 {
+    use SoftDeletes
+
     protected $table = 'orders_info_temp';
 
     public $timestamps = ["created_at"];

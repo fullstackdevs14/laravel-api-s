@@ -39,6 +39,7 @@ class CreateOrdersInfoTable extends Migration
             $table->integer('payInId_share_bill')->nullable();
             $table->integer('fees')->default(0);
             $table->integer('applicationUser_id_share_bill')->nullable();
+            $table->softDeletes();
         });
     }
 

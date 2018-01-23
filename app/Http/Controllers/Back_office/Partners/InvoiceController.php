@@ -70,6 +70,28 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Cette fonction génère un facture pour le mois dernier, pour un partenaire.
+     *
+     * @param $partner_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function invoiceGenerateThisMonth
+    (
+        $partner_id
+    )
+    {
+        event(
+            new PartnerSendInvoiceEvent($partner_id,
+                (new Carbon('first day of this month'))->toDateString(),
+                (new Carbon('today'))->toDateString()
+            ));
+
+        sleep(10);
+
+        return redirect()->route('partner.invoices.index', $partner_id);
+    }
+
+    /**
      * Cette fonction liste les factures enregitrées sur le serveur pour une partenaire.
      *
      * @param Request $request

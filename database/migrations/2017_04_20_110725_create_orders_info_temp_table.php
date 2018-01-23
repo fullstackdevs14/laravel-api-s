@@ -32,6 +32,7 @@ class CreateOrdersInfoTempTable extends Migration
                 ->on('orders_info');
             $table->string('orderId');
             $table->integer('application_user_id_share_bill')->nullable();
+            $table->softDeletes();
         });
     }
 

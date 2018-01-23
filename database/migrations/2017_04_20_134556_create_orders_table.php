@@ -29,6 +29,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('tax');
             $table->boolean('alcohol');
             $table->integer('quantity');
+            $table->softDeletes();
         });
     }
 

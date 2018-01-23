@@ -122,6 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('partner/invoiceGenerator/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerate');
     Route::get('partner/index/{partner_id}', 'Back_office\Partners\InvoiceController@index')->name('partner.invoices.index');
     Route::get('partner/invoiceGenerateLastMonth/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateLastMonth')->name('partner.invoices.generateLastMonth');
+    Route::get('partner/invoiceGenerateThisMonth/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateThisMonth')->name('partner.invoices.generateThisMonth');
     Route::get('partner/invoiceDownload/{invoice_id}', 'Back_office\Partners\InvoiceController@download')->name('partner.invoices.download');
     /**
      * Orders resources
