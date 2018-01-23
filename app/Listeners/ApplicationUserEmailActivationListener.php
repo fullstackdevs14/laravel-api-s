@@ -39,6 +39,13 @@ class ApplicationUserEmailActivationListener implements ShouldQueue
     private $applicationUserEmailConfirmation;
 
     /**
+     * Il s'agit du token utilisé pour identifier et valider le mail.
+     *
+     * @var string
+     */
+    private $token;
+
+    /**
      * ApplicationUserEmailActivationListener constructeur.
      * @param ApplicationUserEmailConfirmation $applicationUserEmailConfirmation
      */
@@ -87,24 +94,14 @@ class ApplicationUserEmailActivationListener implements ShouldQueue
     }
 
     /**
-     * Obtient l'url de base renseignées dans le .env.
-     *
-     * @return mixed
-     */
-    private function getBaseUrl()
-    {
-        return Config::get('constants.base_url');
-    }
-
-    /**
      * Envoi le mail de vérification de l'email.
      */
     private function sendMail()
     {
-        Mail::send('emails.email_validation',
+        Mail::send('emails.applicationUser_email_validation',
             ['url_token' => 'api/emailConfirmationToken/' . $this->token,
                 'applicationUser_name' => $this->applicationUser->firstName,
-                'base_url' => ToolsHandler::makeToken(200)
+                'base_url' => ToolsHandler::getBaseUrl()
             ], function ($message) {
                 $message->to($this->applicationUser->email)->subject('Validation de l\'adresse email - ' . Config::get('constants.company_name'));
             });

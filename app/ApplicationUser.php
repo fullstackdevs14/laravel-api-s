@@ -24,7 +24,8 @@ class ApplicationUser extends Authenticatable
         'password',
         'active_payment',
         'mango_id',
-        'mango_card_id'
+        'mango_card_id',
+        'cgu_cgv_accepted'
     ];
 
     /**

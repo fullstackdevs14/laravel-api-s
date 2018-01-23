@@ -11,7 +11,7 @@
         <div class="col-sm-10 col-sm-offset-1">
             @if($applicationUser->picture != null)
                 <div class="avatar-circle">
-                    <img style="width: 100px; height: 100px; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%;" src="{{ asset('uploads/application_users_img/' . $applicationUser->picture) }}" />
+                    <img style="width: 100px; height: 100px; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%;" src="{{ asset('storage/uploads/application_users_img/' . $applicationUser->picture) }}" />
                 </div>
             @else
                 <span class="glyphicon glyphicon-user"><i>   -   Pas de photo de profil</i></span>
