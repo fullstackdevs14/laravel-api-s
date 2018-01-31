@@ -27,9 +27,10 @@
     <table cellspacing="0" cellpadding="0" class="force-full-width" bgcolor="#ffffff">
         <tr>
             <td style="background-color:#ffffff; padding: 10px">
-
+                <br/>
                 <p>Vous trouverez ci-joint les factures concernant la commande n° {{ $orderInfo->orderId }}.</p>
-
+                <br/>
+                <p>L'équipe {{ \Illuminate\Support\Facades\Config::get('constants.company_name') }}.</p>
             </td>
         </tr>
     </table>

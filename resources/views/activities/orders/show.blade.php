@@ -74,7 +74,9 @@
     {!! Html::ListYesOrNo('Délivrée', $orderInfo->delivered) !!}
     {!! Html::ListYesOrNo('Incident', $orderInfo->incident) !!}
 
-    {{ link_to_route('applicationUser_invoice.download', 'Télécharger la facture',  $orderInfo->id, ['class' => 'btn btn-default pull-right', 'target' => '_blank']) }}
+    @if($orderInfo->accepted == "1")
+        {{ link_to_route('applicationUser_invoice.download', 'Télécharger la facture',  $orderInfo->id, ['class' => 'btn btn-default pull-right', 'target' => '_blank']) }}
+    @endif
 
 @endsection
 
