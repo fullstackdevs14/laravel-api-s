@@ -9,8 +9,13 @@
 @endsection
 
 @section('panel-body')
-    {!! Html::RouteWithIcon('partner.invoices.generateLastMonth', 'Génèrer une facture pour le mois dernier (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
-    {!! Html::RouteWithIcon('partner.invoices.generateThisMonth', 'Génèrer une facture pour le mois en cours (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
+    {!! Html::RouteWithIcon('partner.invoices.generateLastMonthAndSend', 'Génèrer une facture pour le mois dernier (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
+    <br />
+    <br />
+    {!! Html::RouteWithIcon('partner.invoices.generateThisMonthAndSend', 'Génèrer une facture pour le mois en cours (avec envoi)', $partner_id, 'btn-default', 'open-file') !!}
+    <br />
+    <br />
+    {!! Html::RouteWithIcon('partner.invoices.generateThisMonth', 'Génèrer une facture pour le mois en cours', $partner_id, 'btn-default', 'open-file') !!}
 
     <br/>
     <br/>
@@ -34,7 +39,7 @@
                 <td style="vertical-align: middle" class="text-default">{{ $invoice->from }}</td>
                 <td style="vertical-align: middle" class="text-default">{{ $invoice->to }}</td>
                 <td style="vertical-align: middle" class="text-default">{{ $invoice->invoice_id }}</td>
-                <td style="vertical-align: middle">{{ link_to_route('partner.invoices.download', 'télécharger',  $invoice->invoice_id, ['class' => 'btn btn-default', 'target' => '_blank']) }}</td>
+                <td style="vertical-align: middle">{{ link_to_route('partner.invoices.download', 'Télécharger',  $invoice->invoice_id, ['class' => 'btn btn-default', 'target' => '_blank']) }}</td>
             </tr>
         @endforeach
         </tbody>

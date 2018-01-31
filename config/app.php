@@ -191,7 +191,8 @@ return [
         Intervention\Validation\ValidationServiceProvider::class,
 
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class
-    ],
+
+        ],
 
     /*
     |--------------------------------------------------------------------------

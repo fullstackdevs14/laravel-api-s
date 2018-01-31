@@ -14,7 +14,7 @@ class CreateApplicationUsersEmailValidationTable extends Migration
     public function up()
     {
         Schema::create('application_users_email_validation', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->integer('applicationUser_id')->unsigned();
             $table->foreign('applicationUser_id')

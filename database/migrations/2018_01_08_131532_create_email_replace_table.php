@@ -14,7 +14,7 @@ class CreateEmailReplaceTable extends Migration
     public function up()
     {
         Schema::create('application_users_email_replace', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             $table->integer('applicationUser_id')->unsigned()->nullable();

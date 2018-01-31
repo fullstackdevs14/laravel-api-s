@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIncidentMonitoringTable extends Migration
+class CreateApplicationUsersInvoicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,22 @@ class CreateIncidentMonitoringTable extends Migration
      */
     public function up()
     {
-        Schema::create('incidents_monitoring', function(Blueprint $table) {
+        Schema::create('application_users_invoices', function(Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->timestamp('created_at');
+            $table->integer('applicationUser_id')->unsigned()->nullable();
+            $table->foreign('applicationUser_id')
+                ->references('id')
+                ->on('application_users')
+                ->onDelete('set null');
             $table->integer('order_id')->unsigned()->nullable();
             $table->foreign('order_id')
                 ->references('id')
                 ->on('orders_info')
                 ->onDelete('set null');
-            $table->string('message');
-            $table->boolean('phone');
-            $table->boolean('email');
-            $table->boolean('reimburse');
+            $table->text('invoice_id');
+            $table->enum('type', ['invoice', 'credit']);
         });
-
     }
 
     /**
@@ -36,6 +38,6 @@ class CreateIncidentMonitoringTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('incidents_monitoring');
+        Schema::dropIfExists('application_users_invoices');
     }
 }

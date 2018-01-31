@@ -19,7 +19,12 @@ return [
     'base_url' => env('BASE_URL', 'https://www.sipper.pro/public/'),
     'base_url_application_user' => env('BASE_URL_USER', 'https://www.sipper.pro/public/uploads/application_users_img/'),
     'base_url_partner' => env('BASE_URL_PARTNER', 'https://www.sipper.pro/public/uploads/partners_img/'),
+
     'base_url_invoice' => env('BASE_URL_INVOICE', 'https://www.sipper.pro/public/uploads/invoices/'),
+
+    'base_url_invoice_partners' => env('BASE_URL_INVOICE_PARTNERS', 'https://www.sipper.pro/public/uploads/invoices/partners/'),
+    'base_url_invoice_applicationsUsers' => env('BASE_URL_INVOICE_APPLICATION_USERS', 'https://www.sipper.pro/public/uploads/invoices/application_users/'),
+
     'general_id_application' => env('GENERAL_ID_APPLICATION'),
     'general_wallet_application' => env('GENERAL_WALLET_APPLICATION'),
 

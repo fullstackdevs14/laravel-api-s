@@ -6,6 +6,7 @@ use App\ApplicationUser;
 use App\Events\OrderEvent;
 use App\Events\OrderHandledEvent;
 use App\Handlers\FCMNotifications\FCMNotificationsHandler;
+use App\Handlers\Invoices\InvoicesGenerator;
 use App\Handlers\MangoPay\MangoPayHandler;
 use App\Handlers\Orders\OrdersHandler;
 use App\Http\Controllers\Controller;
@@ -138,6 +139,10 @@ class PartnerOrdersController extends Controller
      * @var FCMNotificationsHandler
      */
     private $FCMNotificationsHandler;
+    /**
+     * @var InvoicesGenerator
+     */
+    private $invoicesGenerator;
 
     /**
      * PartnerOrdersController constructor.
@@ -154,6 +159,7 @@ class PartnerOrdersController extends Controller
      * @param ApplicationUserRepository $applicationUserRepository
      * @param OrderInfoTempRepository $orderInfoTempRepository
      * @param FCMNotificationsHandler $FCMNotificationsHandler
+     * @param InvoicesGenerator $invoicesGenerator
      */
     public function __construct
     (
@@ -169,7 +175,8 @@ class PartnerOrdersController extends Controller
         OrderInfoRepository $orderInfoRepository,
         ApplicationUserRepository $applicationUserRepository,
         OrderInfoTempRepository $orderInfoTempRepository,
-        FCMNotificationsHandler $FCMNotificationsHandler
+        FCMNotificationsHandler $FCMNotificationsHandler,
+        InvoicesGenerator $invoicesGenerator
     )
     {
         Config::set('jwt.user', Partner::class);
@@ -188,6 +195,7 @@ class PartnerOrdersController extends Controller
         $this->applicationUserRepository = $applicationUserRepository;
         $this->orderInfoTempRepository = $orderInfoTempRepository;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
+        $this->invoicesGenerator = $invoicesGenerator;
     }
 
     /**
@@ -294,6 +302,7 @@ class PartnerOrdersController extends Controller
      * ---> Envoi un message de succès en JSON au partenaire.
      * --> Si SUCCES :
      * ---> Enregistre la commande comme acceptée dans la table "orders_info".
+     * ---> Génère une facture.
      * ---> Prévient les utilisateurs de la situation via une push notification (FCMNotificationHandler).
      * ---> Déclenche l'évènement "orderHandledEvent" et envoi une confirmation de commande REUSSIE aux utilisateurs.
      * ---> Envoi un message de succès en JSON au partenaire.
@@ -372,6 +381,8 @@ class PartnerOrdersController extends Controller
 
             $this->orderInfoRepository->acceptedWithoutIncidentFindOrFail($request['order_id']);
 
+            $this->invoicesGenerator->generateApplicationUserInvoice($applicationUser->id, $orderInfo->id);
+
             $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser,
@@ -438,6 +449,8 @@ class PartnerOrdersController extends Controller
             }
 
             $this->orderInfoRepository->acceptedWithoutIncidentFindOrFail($request['order_id']);
+
+            $this->invoicesGenerator->generateApplicationUserInvoice($applicationUser_1->id, $orderInfo->id);
 
             $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (

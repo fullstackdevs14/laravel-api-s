@@ -29,13 +29,18 @@
     25 => 'App\\Providers\\BroadcastServiceProvider',
     26 => 'App\\Providers\\EventServiceProvider',
     27 => 'App\\Providers\\RouteServiceProvider',
-    28 => 'Collective\\Html\\HtmlServiceProvider',
-    29 => 'Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider',
-    30 => 'Intervention\\Image\\ImageServiceProvider',
-    31 => 'Propaganistas\\LaravelPhone\\LaravelPhoneServiceProvider',
-    32 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    33 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
-    34 => 'LaravelFCM\\FCMServiceProvider',
+    28 => 'App\\Providers\\HtmlMacroServiceProvider',
+    29 => 'Collective\\Html\\HtmlServiceProvider',
+    30 => 'Barryvdh\\Cors\\ServiceProvider',
+    31 => 'Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider',
+    32 => 'Intervention\\Image\\ImageServiceProvider',
+    33 => 'Propaganistas\\LaravelPhone\\LaravelPhoneServiceProvider',
+    34 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    35 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
+    36 => 'LaravelFCM\\FCMServiceProvider',
+    37 => 'Cviebrock\\LaravelMangopay\\ServiceProvider',
+    38 => 'Intervention\\Validation\\ValidationServiceProvider',
+    39 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
   ),
   'eager' => 
   array (
@@ -54,11 +59,15 @@
     12 => 'App\\Providers\\BroadcastServiceProvider',
     13 => 'App\\Providers\\EventServiceProvider',
     14 => 'App\\Providers\\RouteServiceProvider',
-    15 => 'Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider',
-    16 => 'Intervention\\Image\\ImageServiceProvider',
-    17 => 'Propaganistas\\LaravelPhone\\LaravelPhoneServiceProvider',
-    18 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    19 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
+    15 => 'App\\Providers\\HtmlMacroServiceProvider',
+    16 => 'Barryvdh\\Cors\\ServiceProvider',
+    17 => 'Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider',
+    18 => 'Intervention\\Image\\ImageServiceProvider',
+    19 => 'Propaganistas\\LaravelPhone\\LaravelPhoneServiceProvider',
+    20 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    21 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
+    22 => 'Intervention\\Validation\\ValidationServiceProvider',
+    23 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
   ),
   'deferred' => 
   array (
@@ -159,6 +168,7 @@
     'fcm.client' => 'LaravelFCM\\FCMServiceProvider',
     'fcm.group' => 'LaravelFCM\\FCMServiceProvider',
     'fcm.sender' => 'LaravelFCM\\FCMServiceProvider',
+    'MangoPay\\MangoPayApi' => 'Cviebrock\\LaravelMangopay\\ServiceProvider',
   ),
   'when' => 
   array (
@@ -205,6 +215,9 @@
     array (
     ),
     'LaravelFCM\\FCMServiceProvider' => 
+    array (
+    ),
+    'Cviebrock\\LaravelMangopay\\ServiceProvider' => 
     array (
     ),
   ),

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back_office\Orders;
 
 use App\ApplicationUser;
+use App\Handlers\Invoices\VATCalculator;
 use App\Http\Controllers\Controller;
 use App\MenuCategories;
 use App\Order;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Input;
  * Class OrderController
  * @package App\Http\Controllers\Back_office\Orders
  */
-class OrderController extends Controller
+class OrdersController extends Controller
 {
     /**
      * C'est un model.
@@ -127,7 +128,7 @@ class OrderController extends Controller
                 foreach ($items as $item) {
                     $sum += $item['itemPrice'] * $item['quantity'];
                     $quantity += $item['quantity'];
-                    $tax += $item['itemPrice'] * $item['tax'] / 100 * $item['quantity'];
+                    $tax += VATCalculator::get_vat_amount_from_ttc_and_tax(($item['itemPrice'] * $item['quantity']), $item['tax']);
                 }
             }
         } else {
@@ -135,7 +136,7 @@ class OrderController extends Controller
                 foreach ($items as $item) {
                     $sum += $item['itemHHPrice'] * $item['quantity'];
                     $quantity += $item['quantity'];
-                    $tax += $item['itemHHPrice'] * $item['tax'] / 100 * $item['quantity'];
+                    $tax += VATCalculator::get_vat_amount_from_ttc_and_tax(($item['itemHHPrice'] * $item['quantity']), $item['tax']);
                 }
             }
         }
@@ -159,7 +160,7 @@ class OrderController extends Controller
 
         $applicationUser = $this->applicationUser->findOrFail($orderInfo->applicationUser_id);
 
-        if($orderInfo->applicationUser_id_share_bill != null) {
+        if ($orderInfo->applicationUser_id_share_bill != null) {
             $applicationUser_2 = $this->applicationUser->findOrFail($orderInfo->applicationUser_id_share_bill);
         } else {
             $applicationUser_2 = null;

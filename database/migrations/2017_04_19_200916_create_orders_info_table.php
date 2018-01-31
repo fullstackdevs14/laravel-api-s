@@ -14,7 +14,7 @@ class CreateOrdersInfoTable extends Migration
     public function up()
     {
         Schema::create('orders_info', function (Blueprint $table){
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->timestamps();
 

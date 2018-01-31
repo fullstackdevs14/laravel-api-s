@@ -64,6 +64,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('applicationUser/mangoPay_user_details/{applicationUser_id}', 'Back_office\ApplicationUsers\ApplicationUserController@showMangoPayUserDetails')->name('mangoPay.application_user.details');
 
+    Route::get('applicationUser/invoice_download/{order_id}', 'Back_office\ApplicationUsers\ApplicationUserInvoiceController@downloadInvoice')->name('applicationUser_invoice.download');
+
     /**
      * Incidents
      */
@@ -121,13 +123,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('partner/invoiceGenerator/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerate');
     Route::get('partner/index/{partner_id}', 'Back_office\Partners\InvoiceController@index')->name('partner.invoices.index');
-    Route::get('partner/invoiceGenerateLastMonth/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateLastMonth')->name('partner.invoices.generateLastMonth');
+    Route::get('partner/invoiceGenerateLastMonthAndSend/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateLastMonthAndSend')->name('partner.invoices.generateLastMonthAndSend');
+    Route::get('partner/invoiceGenerateThisMonthAndSend/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateThisMonthAndSend')->name('partner.invoices.generateThisMonthAndSend');
     Route::get('partner/invoiceGenerateThisMonth/{partner_id}', 'Back_office\Partners\InvoiceController@invoiceGenerateThisMonth')->name('partner.invoices.generateThisMonth');
     Route::get('partner/invoiceDownload/{invoice_id}', 'Back_office\Partners\InvoiceController@download')->name('partner.invoices.download');
     /**
      * Orders resources
      */
-    Route::resource('/order', 'Back_office\Orders\OrderController');
+    Route::resource('/order', 'Back_office\Orders\OrdersController');
 
     /**
      * Exports

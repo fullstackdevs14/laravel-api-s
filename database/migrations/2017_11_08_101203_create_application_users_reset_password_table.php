@@ -14,7 +14,7 @@ class CreateApplicationUsersResetPasswordTable extends Migration
     public function up()
     {
         Schema::create('application_users_reset_password', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
 
             $table->integer('applicationUser_id')->unsigned()->nullable();

@@ -33,10 +33,6 @@
             line-height: 115%;
         }
 
-        .bold {
-            font-style: italic
-        }
-
         /* General styling */
         td {
             font-family: Arial, sans-serif;
@@ -142,9 +138,10 @@
                             <table style="margin:0 auto;" cellspacing="0" cellpadding="0" width="100%">
                                 <tr>
                                     <td style="text-align: center;">
-                                        <a href="{{ \Illuminate\Support\Facades\Config::get('constants.company_website') }}"><img class="w320" width="311" height="83"
-                                                                             src="{{$base_url}}img/Sipper-logo.svg"
-                                                                             alt="company logo"></a>
+                                        <a href="{{ \Illuminate\Support\Facades\Config::get('constants.company_website') }}"><img
+                                                    class="w320" width="311" height="83"
+                                                    src="{{ \Illuminate\Support\Facades\Config::get('constants.base_url') }}img/Sipper-logo.svg"
+                                                    alt="company logo"></a>
                                     </td>
                                 </tr>
                             </table>
@@ -179,8 +176,8 @@
                                     <td style="color:#27aa90; font-size: 14px; text-align:center;">
                                         <a href="mailto:{{ \Illuminate\Support\Facades\Config::get('constants.mail_main') }}">Contact</a>
                                         <!--| <a href="#">Unsubscribe</a>-->
-                                        <br />
-                                        <br />
+                                        <br/>
+                                        <br/>
                                     </td>
                                 </tr>
                             </table>

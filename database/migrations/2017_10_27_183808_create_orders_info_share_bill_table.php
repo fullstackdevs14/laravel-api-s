@@ -14,7 +14,7 @@ class CreateOrdersInfoShareBillTable extends Migration
     public function up()
     {
         Schema::create('orders_info_share_bill', function (Blueprint $table){
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->integer('applicationUser_id_1')->unsigned()->nullable();
             $table->foreign('applicationUser_id_1')
@@ -38,7 +38,6 @@ class CreateOrdersInfoShareBillTable extends Migration
             $table->string('orderId');
             $table->boolean('accepted')->default(0);
             $table->boolean('expired')->default(0);
-            $table->softDeletes();
         });
     }
 

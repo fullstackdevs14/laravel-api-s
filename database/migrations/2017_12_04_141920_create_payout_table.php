@@ -14,8 +14,8 @@ class CreatePayoutTable extends Migration
     public function up()
     {
         Schema::create('payouts', function(Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->timestamp('created_at');
             $table->integer('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')

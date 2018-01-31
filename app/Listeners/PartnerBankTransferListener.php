@@ -140,7 +140,7 @@ class PartnerBankTransferListener implements ShouldQueue
      */
     private function sendMail()
     {
-        Mail::send('emails.bank_transfer_partner',
+        Mail::send('emails.partner_bank_transfer',
             [
                 'partner' => $this->partner,
                 'amount' => $this->amount,

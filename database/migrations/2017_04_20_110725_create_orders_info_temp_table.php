@@ -14,7 +14,7 @@ class CreateOrdersInfoTempTable extends Migration
     public function up()
     {
         Schema::create('orders_info_temp', function (Blueprint $table){
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->integer('applicationUser_id')->unsigned()->nullable();
             $table->foreign('applicationUser_id')
@@ -32,7 +32,6 @@ class CreateOrdersInfoTempTable extends Migration
                 ->on('orders_info');
             $table->string('orderId');
             $table->integer('application_user_id_share_bill')->nullable();
-            $table->softDeletes();
         });
     }
 

@@ -358,8 +358,6 @@ class ApplicationUserOrderController extends Controller
         Request $request
     )
     {
-        $this->warnInDevMod();
-
         /**
          * Vérifie le n° de téléphone.
          */

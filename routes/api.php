@@ -93,6 +93,7 @@ Route::group(['middleware' => ['jwt.applicationUser']], function () {
 
     Route::post('/registerNotifications', 'API\ApplicationUsers\NotificationController@register');
 
+    Route::post('/getInvoicesForOrder', 'API\ApplicationUsers\InvoiceController@sendInvoicesByMail');
 });
 
 Route::get('/applicationUserNewEmailConfirmation/{token}', 'API\ApplicationUsers\EmailReplaceController@newEmailConfirmation');

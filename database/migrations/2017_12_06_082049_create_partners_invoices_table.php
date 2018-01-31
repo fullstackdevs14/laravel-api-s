@@ -13,9 +13,9 @@ class CreateInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('invoices', function(Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+        Schema::create('partners_invoices', function(Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->timestamp('created_at');
             $table->integer('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')
@@ -24,8 +24,8 @@ class CreateInvoicesTable extends Migration
             $table->date('from');
             $table->date('to');
             $table->text('invoice_id');
+            $table->enum('type', ['invoice', 'credit']);
         });
-
     }
 
     /**
@@ -35,6 +35,6 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('partners_invoices');
     }
 }

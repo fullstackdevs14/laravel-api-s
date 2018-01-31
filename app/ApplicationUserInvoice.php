@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Payout extends Model
+class ApplicationUserInvoice extends Model
 {
-    protected $table = 'payouts';
+    protected $table = 'application_users_invoices';
 
     public $timestamps = false;
 
@@ -21,11 +21,8 @@ class Payout extends Model
 
     protected $fillable =
         [
-            'partner_id',
-            'amount',
-            'success',
-            'description',
-            'mango_payout_id'
+            'applicationUser_id',
+            'order_id',
+            'invoice_id',
         ];
-
 }

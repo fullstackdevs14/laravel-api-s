@@ -14,8 +14,8 @@ class CreateRefundsTable extends Migration
     public function up()
     {
         Schema::create('refunds', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->timestamp('created_at');
             $table->integer('applicationUser_id')->unsigned()->nullable();
             $table->foreign('applicationUser_id')
                 ->references('id')

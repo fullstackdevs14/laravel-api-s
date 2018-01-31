@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Back_office\Partners;
 
 use App\Events\PartnerSendInvoiceEvent;
+use App\Handlers\Invoices\InvoicesGenerator;
 use App\Http\Controllers\Controller;
-use App\Invoice;
+use App\PartnerInvoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +25,9 @@ class InvoiceController extends Controller
      *
      * Il sert à rècupèrer la liste des factures pour un partenaire.
      *
-     * @var Invoice
+     * @var PartnerInvoice
      */
-    private $invoice;
+    private $partnerInvoice;
 
     /**
      * C'est le nombre de lignes dans les listes, par page.
@@ -36,15 +37,24 @@ class InvoiceController extends Controller
     private $nbrPerPage = 15;
 
     /**
+     * @var InvoicesGenerator
+     */
+    private $invoicesGenerator;
+
+    /**
      * InvoiceController constructor.
-     * @param Invoice $invoice
+     * @param PartnerInvoice $partnerInvoice
+     * @param InvoicesGenerator $invoicesGenerator
+     * @internal param PartnerInvoice $invoice
      */
     public function __construct
     (
-        Invoice $invoice
+        PartnerInvoice $partnerInvoice,
+        InvoicesGenerator $invoicesGenerator
     )
     {
-        $this->invoice = $invoice;
+        $this->partnerInvoice = $partnerInvoice;
+        $this->invoicesGenerator = $invoicesGenerator;
     }
 
     /**
@@ -53,7 +63,7 @@ class InvoiceController extends Controller
      * @param $partner_id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function invoiceGenerateLastMonth
+    public function invoiceGenerateLastMonthAndSend
     (
         $partner_id
     )
@@ -70,12 +80,12 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Cette fonction génère un facture pour le mois dernier, pour un partenaire.
+     * Cette fonction génère un facture pour le mois en cours, pour un partenaire.
      *
      * @param $partner_id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function invoiceGenerateThisMonth
+    public function invoiceGenerateThisMonthAndSend
     (
         $partner_id
     )
@@ -87,6 +97,26 @@ class InvoiceController extends Controller
             ));
 
         sleep(10);
+
+        return redirect()->route('partner.invoices.index', $partner_id);
+    }
+
+    /**
+     * Cette fonction génère un facture pour le mois en cours, pour un partenaire.
+     *
+     * @param $partner_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function invoiceGenerateThisMonth
+    (
+        $partner_id
+    )
+    {
+        $this->invoicesGenerator->generatePartnerInvoice(
+            (new Carbon('first day of this month'))->format('Y-m-d'),
+            (new Carbon('tomorrow'))->format('Y-m-d'),
+            $partner_id
+        );
 
         return redirect()->route('partner.invoices.index', $partner_id);
     }
@@ -104,7 +134,7 @@ class InvoiceController extends Controller
         $partner_id
     )
     {
-        $invoices = $this->invoice
+        $invoices = $this->partnerInvoice
             ->where('partner_id', $partner_id)
             ->where(function ($query) use ($request, $partner_id) {
                 if (($search = $request->get('search'))) {
@@ -130,7 +160,7 @@ class InvoiceController extends Controller
         $invoice_id
     )
     {
-        $pathToFile = storage_path() . '/app/public/uploads/invoices/' . $invoice_id . '.pdf';
+        $pathToFile = storage_path() . '/app/public/uploads/invoices/partners' . $invoice_id . '.pdf';
         return response()->file($pathToFile);
     }
 

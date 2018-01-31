@@ -29,9 +29,7 @@
         {!! Html::ListInfo('Identifiant', $applicationUser_2->email) !!}
     @endif
 
-
-
-        <table class="table">
+    <table class="table">
         <thead>
         <tr>
             <th></th>
@@ -67,7 +65,7 @@
             <td><strong>Total</strong></td>
             <td><strong>{{ $sum }} € TTC</strong></td>
             <td><strong>{{ $quantity }} consommation(s)</strong></td>
-            <td><strong>{{ $tax_excluding_sum }} € HT</strong></td>
+            <td><strong>{{ number_format($tax_excluding_sum, 2) }} € HT</strong></td>
         </tr>
         </tfoot>
     </table>
@@ -75,6 +73,9 @@
     {!! Html::ListStatus($orderInfo->accepted) !!}
     {!! Html::ListYesOrNo('Délivrée', $orderInfo->delivered) !!}
     {!! Html::ListYesOrNo('Incident', $orderInfo->incident) !!}
+
+    {{ link_to_route('applicationUser_invoice.download', 'Télécharger la facture',  $orderInfo->id, ['class' => 'btn btn-default pull-right', 'target' => '_blank']) }}
+
 @endsection
 
 @section('button-back')

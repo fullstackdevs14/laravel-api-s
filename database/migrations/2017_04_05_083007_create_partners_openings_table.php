@@ -14,7 +14,7 @@ class CreatePartnersOpeningsTable extends Migration
     public function up()
     {
         Schema::create('partners_openings', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('partner_id')->unsigned();
             $table->foreign('partner_id')
                 ->references('id')

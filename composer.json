@@ -1,12 +1,14 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
-  "keywords": [
-    "framework",
-    "laravel"
-  ],
+  "name": "ApplicationSipper",
+  "description": "The BackEnd.",
   "license": "MIT",
   "type": "project",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/thomasbcy/laravel-pdf.git"
+    }
+  ],
   "require": {
     "php": ">=5.6.4",
     "barryvdh/laravel-cors": "^0.9.2",
@@ -21,16 +23,16 @@
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.3.0",
     "maatwebsite/excel": "~2.1.0",
-    "niklasravnsborg/laravel-pdf": "^2.0",
     "predis/predis": "^1.1",
     "propaganistas/laravel-phone": "^2.8",
     "tymon/jwt-auth": "0.5.*",
-    "guzzlehttp/guzzle": "~5.3|~6.0"
+    "guzzlehttp/guzzle": "~5.3|~6.0",
+    "niklasravnsborg/laravel-pdf": "dev-master"
   },
   "require-dev": {
     "mockery/mockery": "0.9.*",
     "phpunit/phpunit": "~6.0",
-    "filp/whoops" : "~2.0"
+    "filp/whoops": "~2.0"
   },
   "autoload": {
     "classmap": [

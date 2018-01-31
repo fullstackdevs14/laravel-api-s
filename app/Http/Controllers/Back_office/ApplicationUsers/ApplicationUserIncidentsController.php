@@ -527,7 +527,7 @@ class ApplicationUserIncidentsController extends Controller
         $applicationUser = $this->applicationUser->findOrFail($orderInfo->applicationUser_id);
         $results = $this->mangoPayHandler->refund($this->mangoPayApi, $orderInfo, $applicationUser, $request->amount);
 
-        $description = '<strong>Message MangoPay : </strong>' . $results->ResultMessage . "<br><strong>Notes : </strong>" . $request->description;
+        $description = '<strong>Message MangoPay : </strong>' . $results->ResultMessage . "<br><strong>Motif : </strong>" . $request->description;
 
         if ($results->Status === "FAILED") {
             $status = false;
@@ -607,17 +607,17 @@ class ApplicationUserIncidentsController extends Controller
         $incident = $orderInfo->incident()->get()->first();
         $applicationUser = $this->applicationUser->findOrFail($request->applicationUser_id);
 
-        if ($request['applicationUser_id'] === $orderInfo->applicationUser_id) {
+        if ($request['applicationUser_id'] == $orderInfo->applicationUser_id) {
             $payInId = $orderInfo->payInId;
-        } elseif ($request['applicationUser_id'] === $orderInfo->applicationUser_id_share_bill) {
+        } elseif ($request['applicationUser_id'] == $orderInfo->applicationUser_id_share_bill) {
             $payInId = $orderInfo->payInId_share_bill;
         } else {
             // TODO -- Vérifier la gestion des erreurs.
-            dd('Erreur inconnue');
+            dd('Erreur: le payin id renseigné est incorrect...');
         }
 
         $results = $this->mangoPayHandler->refundSharedBill($this->mangoPayApi, $orderInfo, $payInId, $applicationUser, $request->amount);
-        $description = '<strong>Message MangoPay : </strong>' . $results->ResultMessage . "<br><strong>Notes : </strong>" . $request->description;
+        $description = '<strong>Message MangoPay : </strong>' . $results->ResultMessage . "<br><strong>Motif : </strong>" . $request->description;
 
         if ($results->Status === "FAILED") {
             $status = false;

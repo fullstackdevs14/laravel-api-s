@@ -14,7 +14,7 @@ class CreatePartnersMenusTable extends Migration
     public function up()
     {
         Schema::create('partners_menus', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->timestamps();
 

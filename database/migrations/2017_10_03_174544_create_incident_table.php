@@ -14,7 +14,7 @@ class CreateIncidentTable extends Migration
     public function up()
     {
         Schema::create('incidents', function(Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->integer('order_id')->unsigned()->nullable();
             $table->foreign('order_id')

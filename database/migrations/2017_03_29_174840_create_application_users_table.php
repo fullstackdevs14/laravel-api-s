@@ -15,7 +15,7 @@ class CreateApplicationUsersTable extends Migration
     public function up()
     {
         Schema::create('application_users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->string('firstName', 100);
             $table->string('lastName', 100);
@@ -30,6 +30,7 @@ class CreateApplicationUsersTable extends Migration
             $table->integer('mango_card_id')->nullable()->unique();
             $table->boolean('activated')->default(true);
             $table->rememberToken('rememberToken');
+            $table->softDeletes();
         });
     }
 
