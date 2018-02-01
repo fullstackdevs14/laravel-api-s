@@ -115,6 +115,8 @@
                             l'application. Tu pourras bientôt faire bien plus qu'il n'est
                             déjà possible de faire aujourd'hui. En attendant nous te
                             souhaitons un bon moment entre amis chez nos bars partenaires !
+                            <br/>
+                            <br/>
                         </td>
                     </tr>
                 </table>

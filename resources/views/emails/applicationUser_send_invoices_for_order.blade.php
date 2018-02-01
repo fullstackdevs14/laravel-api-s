@@ -11,7 +11,7 @@
                             class="mobile-spacing">
                             <div class="mobile-br">&nbsp;</div>
                             Hello {{ $applicationUser->firstName }} !<br>
-                            Voici le / les facture(s) demandée(s).
+                            Voici la / les facture(s) demandée(s).
                             <br>
                             <br>
                         </td>
