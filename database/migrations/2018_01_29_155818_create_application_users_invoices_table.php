@@ -16,12 +16,12 @@ class CreateApplicationUsersInvoicesTable extends Migration
         Schema::create('application_users_invoices', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamp('created_at');
-            $table->integer('applicationUser_id')->unsigned()->nullable();
+            $table->bigInteger('applicationUser_id')->unsigned()->nullable();
             $table->foreign('applicationUser_id')
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
-            $table->integer('order_id')->unsigned()->nullable();
+            $table->bigInteger('order_id')->unsigned()->nullable();
             $table->foreign('order_id')
                 ->references('id')
                 ->on('orders_info')

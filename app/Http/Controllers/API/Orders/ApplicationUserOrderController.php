@@ -16,6 +16,7 @@ use App\OrderInfoTemp;
 use App\Partner;
 use App\PartnerMenu;
 use App\Repositories\ApplicationUserRepository;
+use App\Repositories\NotificationCheckerRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\OrderInfoShareBillRepository;
 use App\Repositories\OrderInfoTempRepository;
@@ -148,6 +149,15 @@ class ApplicationUserOrderController extends Controller
     private $orderInfoShareBillRepository;
 
     /**
+     * C'est un dépôt.
+     *
+     * Sert à l'enregistrement du status des notification.
+     *
+     * @var NotificationCheckerRepository
+     */
+    private $notificationCheckerRepository;
+
+    /**
      * ApplicationUserOrderController constructor.
      * @param Partner $partner
      * @param OrderInfo $orderInfo
@@ -163,6 +173,7 @@ class ApplicationUserOrderController extends Controller
      * @param OrderInfoTempRepository $orderInfoTempRepository
      * @param FCMNotificationsHandler $FCMNotificationsHandler
      * @param OrderInfoShareBillRepository $orderInfoShareBillRepository
+     * @param NotificationCheckerRepository $notificationCheckerRepository
      */
     public function __construct
     (
@@ -179,7 +190,8 @@ class ApplicationUserOrderController extends Controller
         ApplicationUserRepository $applicationUserRepository,
         OrderInfoTempRepository $orderInfoTempRepository,
         FCMNotificationsHandler $FCMNotificationsHandler,
-        OrderInfoShareBillRepository $orderInfoShareBillRepository
+        OrderInfoShareBillRepository $orderInfoShareBillRepository,
+        NotificationCheckerRepository $notificationCheckerRepository
     )
     {
         Config::set('jwt.user', Partner::class);
@@ -199,6 +211,7 @@ class ApplicationUserOrderController extends Controller
         $this->orderInfoTempRepository = $orderInfoTempRepository;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
         $this->orderInfoShareBillRepository = $orderInfoShareBillRepository;
+        $this->notificationCheckerRepository = $notificationCheckerRepository;
     }
 
     /**
@@ -342,7 +355,7 @@ class ApplicationUserOrderController extends Controller
      * --> Vérifie que "mango_card_id" de la table "application_user" n'est pas null ou retourne un message d'erreur JSON.
      * Cette vérification est éffectuée pour les deux utilisateurs.
      * --> Effectue les enregistrements dans les tables "OrderInfo", "OrderInfoShareBill" et "Order" si la commande est valide.
-     * --> Envoi une notification à l'utilisateur 2 pour demander le partage de l'addition.
+     * --> Envoi une notification à l'utilisateur 2 pour demander le partage de l'addition et enregistre son status en bdd.
      * --> Prévient l'utilisateur 1 par retour JSON que la demande de partage est ben effectuée.
      *
      * Les variables de la requête :
@@ -441,29 +454,29 @@ class ApplicationUserOrderController extends Controller
         /**
          * Si la commande est validée.
          */
-        $user1 = $this->applicationUserRepository->getApplicationUserFromToken();
-        $user2 = $this->applicationUser->where('tel', $tel)->get()->first();
+        $applicationUser_1 = $this->applicationUserRepository->getApplicationUserFromToken();
+        $applicationUser_2 = $this->applicationUser->where('tel', $tel)->get()->first();
 
         /**
          * Vérifie que le paiement est validé.
          */
-        if ($user1->mango_card_id == null) {
+        if ($applicationUser_1->mango_card_id == null) {
             return response()->json([
                 'error' => 'Votre moyen de paiement est inactif. Rendez-vous dans le menu de gauche, puis l\'onglet moyen de paiement pour mettre à jours vos moyens de paiement.',
             ], 422);
         }
-        if ($user2->mango_card_id == null) {
+        if ($applicationUser_2->mango_card_id == null) {
             return response()->json([
                 'error' => 'Le moyen de paiement de l\'utilisateur avec lequel vous souhatez partager votre addition est inactif. Il doit renseigner un moyen de paiement valide avant de pourvoir partager l\'addition.',
             ], 422);
         }
 
         $orderId = $this->orderInfoRepository->createNewOrderId();
-        $orderInfo = $this->orderInfoRepository->newOrderInfo($user1->id, $partner, $orderId, $user2->id);
+        $orderInfo = $this->orderInfoRepository->newOrderInfo($applicationUser_1->id, $partner, $orderId, $applicationUser_2->id);
         /**
          * Stocke les commandes dans la table "OrderInfoTemp".
          */
-        $this->orderInfoShareBillRepository->newOrderInfoShareBill($user1, $user2, $partner, $orderInfo->id, $orderId);
+        $this->orderInfoShareBillRepository->newOrderInfoShareBill($applicationUser_1, $applicationUser_2, $partner, $orderInfo->id, $orderId);
 
         foreach ($items as $item) {
             $this->orderRepository->newOrder(
@@ -479,21 +492,20 @@ class ApplicationUserOrderController extends Controller
         }
 
         $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
-            $user2,
+            $applicationUser_2,
             'Partage d\'addition',
-            "L'utilisateur " . ucfirst($user1->firstName) . ' ' . ucfirst($user1->lastName) . " souhaite partager une addition avec vous. Vous pouvez voir cela dans l'historique des commandes. En haut dans le menu de gauche.",
+            "L'utilisateur " . ucfirst($applicationUser_1->firstName) . ' ' . ucfirst($applicationUser_1->lastName) . " souhaite partager une addition avec vous. Vous pouvez voir cela dans l'historique des commandes. En haut dans le menu de gauche.",
             'default',
             0,
             ['share_bill' => $orderInfo->id]
         );
+        $this->notificationCheckerRepository->newNotificationChecker($applicationUser_2->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'share_accept');
 
-        if (!$result) {
+        if ($result['result'] == false) {
             return response()->json([
                 'message' => "L'utilisateur sélectionné pour le partage de l'addition ne semble pas être être connecté. La demande a tout de même été envoyée."
             ], 200);
         }
-
-        //TODO - Supprimer si la notification n'est pas envoyée.
 
         return response()->json([
             'message' => 'Une fois le partage de votre commande validé par l\'autre utilisateur, le bar recevra celle-ci. Si elle n\'est pas validée dans les ' . CheckOrdersShareBill::TIME_TO_LIVE_FOR_ORDERS . ' min, elle sera automatiquement annulée !'
@@ -578,7 +590,7 @@ class ApplicationUserOrderController extends Controller
      * --> Vérifie l'éxprition avant acceptation et envoi un message d'erreur ou de succès en JSON.
      * --> Enregistre la commande comme accetpé dans la table "orders_info_share_bill".
      * --> Enregistre la commande dans la table "OrderInfoTemp".
-     * --> Envoi une notification à l'utilisateur pour le prévenir que la commande est acceptée.
+     * --> Envoi une notification à l'utilisateur pour le prévenir que la commande est acceptée et enregistre le status en bdd.
      * --> Prépare et envoi la commande à l'interface du partenaire.
      * --> Retourne un message JSON de succès à l'utilisateur 2.
      *
@@ -623,15 +635,14 @@ class ApplicationUserOrderController extends Controller
             $orderInfoShareBill->partner_id,
             $orderInfoShareBill->applicationUser_id_2);
 
-        //TODO: Vérifier si l'id du partenaire est sécurisé dans le code ci dessous.
-
-        $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
+        $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
             $this->applicationUser->findOrFail($orderInfoShareBill->applicationUser_id_1),
             'Partage accepté',
             'Votre demande de partager une note a bien été acceptée. Le bar va recevoir votre commande.',
             'default',
             0,
             null);
+        $this->notificationCheckerRepository->newNotificationChecker($orderInfoShareBill->applicationUser_id_1, $orderInfoShareBill->partner_id, $orderInfoShareBill->order_id, $result['result'], 'share_demand');
 
         $orderInfoTemp = $this->orderInfoTemp->where('partner_id', $orderInfoShareBill->partner_id)->get();
         $orders = $this->ordersHandler->prepareArrayForPartnerClient($orderInfoTemp);
@@ -651,7 +662,7 @@ class ApplicationUserOrderController extends Controller
      * --> Vérifie l'éxprition avant acceptation et envoi un message d'erreur ou de succès en JSON.
      * --> Enregistre la commande comme accetpé dans la table "orders_info_share_bill".
      * --> Enregistre la commande dans la table "OrderInfoTemp".
-     * --> Envoi une notification à l'utilisateur pour le prévenir que la commande est acceptée.
+     * --> Envoi une notification à l'utilisateur pour le prévenir que la commande est acceptée et enregistre le status en bdd.
      * --> Prépare et envoi la commande à l'interface du partenaire.
      * --> Retourne un message JSON de succès à l'utilisateur 2.
      *
@@ -688,13 +699,15 @@ class ApplicationUserOrderController extends Controller
         $orderInfo->accepted = 0;
         $orderInfo->update();
 
-        $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
+        $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
             $this->applicationUser->findOrFail($orderInfoShareBill->applicationUser_id_1),
             'Partage refusé',
             'Votre demande de partager une note a été refusée. Le bar ne recevra pas votre commande.',
             'default',
             0,
-            null);
+            null
+        );
+        $this->notificationCheckerRepository->newNotificationChecker($orderInfoShareBill->applicationUser_id_1, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'share_decline');
 
         return response()->json([
             'message' => 'Le partage de commande a bien été refusé. Aucune commande ne sera passée.',

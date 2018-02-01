@@ -16,7 +16,7 @@ class CreateNotificationTokensTable extends Migration
         Schema::create('application_users_notification_token', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->integer('applicationUser_id')->unsigned();
+            $table->bigInteger('applicationUser_id')->unsigned();
             $table->foreign('applicationUser_id')
                 ->references('id')
                 ->on('application_users')

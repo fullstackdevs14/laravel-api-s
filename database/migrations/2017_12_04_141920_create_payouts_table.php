@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePayoutTable extends Migration
+class CreatePayoutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreatePayoutTable extends Migration
      */
     public function up()
     {
-        Schema::create('payouts', function(Blueprint $table) {
+        Schema::create('payouts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamp('created_at');
-            $table->integer('partner_id')->unsigned()->nullable();
+            $table->bigInteger('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')
                 ->onDelete('set null');
             $table->float('amount', 8, 2);
             $table->boolean('success')->nullable();
+            $table->text('description')->nullable();
             $table->integer('mango_payout_id');
         });
     }

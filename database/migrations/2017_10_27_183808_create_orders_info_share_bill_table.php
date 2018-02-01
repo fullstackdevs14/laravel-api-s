@@ -16,22 +16,22 @@ class CreateOrdersInfoShareBillTable extends Migration
         Schema::create('orders_info_share_bill', function (Blueprint $table){
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->integer('applicationUser_id_1')->unsigned()->nullable();
+            $table->bigInteger('applicationUser_id_1')->unsigned()->nullable();
             $table->foreign('applicationUser_id_1')
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
-            $table->integer('applicationUser_id_2')->unsigned()->nullable();
+            $table->bigInteger('applicationUser_id_2')->unsigned()->nullable();
             $table->foreign('applicationUser_id_2')
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
-            $table->integer('partner_id')->unsigned()->nullable();
+            $table->bigInteger('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')
                 ->onDelete('set null');
-            $table->integer('order_id')->unsigned();
+            $table->bigInteger('order_id')->unsigned();
             $table->foreign('order_id')
                 ->references('id')
                 ->on('orders_info');

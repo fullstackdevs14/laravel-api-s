@@ -1,7 +1,7 @@
 <?php
 
 return [
-    
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -190,9 +190,8 @@ return [
 
         Intervention\Validation\ValidationServiceProvider::class,
 
-        niklasravnsborg\LaravelPdf\PdfServiceProvider::class
-
-        ],
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -247,10 +246,10 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
-        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCM' => LaravelFCM\Facades\FCM::class,
         'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
 
-        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
     ],
 
 ];

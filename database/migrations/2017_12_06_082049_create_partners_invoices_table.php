@@ -16,7 +16,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('partners_invoices', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamp('created_at');
-            $table->integer('partner_id')->unsigned()->nullable();
+            $table->bigInteger('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')

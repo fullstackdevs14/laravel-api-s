@@ -18,13 +18,13 @@ class CreateOrdersInfoTable extends Migration
 
             $table->timestamps();
 
-            $table->integer('applicationUser_id')->unsigned()->nullable();
+            $table->bigInteger('applicationUser_id')->unsigned()->nullable();
             $table->foreign('applicationUser_id')
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
 
-            $table->integer('partner_id')->unsigned()->nullable();
+            $table->bigInteger('partner_id')->unsigned()->nullable();
             $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')

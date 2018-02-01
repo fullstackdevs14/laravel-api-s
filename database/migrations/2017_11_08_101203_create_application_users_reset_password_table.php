@@ -17,7 +17,7 @@ class CreateApplicationUsersResetPasswordTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->integer('applicationUser_id')->unsigned()->nullable();
+            $table->bigInteger('applicationUser_id')->unsigned()->nullable();
             $table->foreign('applicationUser_id')
                 ->references('id')
                 ->on('application_users')

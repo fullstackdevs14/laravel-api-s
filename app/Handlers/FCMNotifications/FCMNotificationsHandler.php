@@ -3,8 +3,8 @@
 namespace App\Handlers\FCMNotifications;
 
 use App\ApplicationUser;
-use LaravelFCM\Facades\FCM;
 use App\ApplicationUserNotificationToken;
+use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
@@ -74,7 +74,14 @@ class FCMNotificationsHandler
             $downstreamResponse->tokensWithError()
         );
 
+        if ($downstreamResponse->numberSuccess() > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
         return [
+            'result' => $result,
             'numberSuccess' => $downstreamResponse->numberSuccess(),
             'numberFailure' => $downstreamResponse->numberFailure(),
             'numberModification' => $downstreamResponse->numberModification()

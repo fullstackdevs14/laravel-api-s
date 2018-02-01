@@ -16,6 +16,7 @@ use App\OrderInfoTemp;
 use App\Partner;
 use App\Repositories\ApplicationUserRepository;
 use App\Repositories\IncidentRepository;
+use App\Repositories\NotificationCheckerRepository;
 use App\Repositories\OrderInfoRepository;
 use App\Repositories\OrderInfoTempRepository;
 use App\Repositories\PartnerRepository;
@@ -139,10 +140,24 @@ class PartnerOrdersController extends Controller
      * @var FCMNotificationsHandler
      */
     private $FCMNotificationsHandler;
+
     /**
+     * C'est un gestionnaire.
+     *
+     * Gère la génération pdf des factures.
+     *
      * @var InvoicesGenerator
      */
     private $invoicesGenerator;
+
+    /**
+     * C'est un dépôt.
+     *
+     * Sert à l'enregistrement du status des notification.
+     *
+     * @var NotificationCheckerRepository
+     */
+    private $notificationCheckerRepository;
 
     /**
      * PartnerOrdersController constructor.
@@ -160,6 +175,7 @@ class PartnerOrdersController extends Controller
      * @param OrderInfoTempRepository $orderInfoTempRepository
      * @param FCMNotificationsHandler $FCMNotificationsHandler
      * @param InvoicesGenerator $invoicesGenerator
+     * @param NotificationCheckerRepository $notificationCheckerRepository
      */
     public function __construct
     (
@@ -176,7 +192,8 @@ class PartnerOrdersController extends Controller
         ApplicationUserRepository $applicationUserRepository,
         OrderInfoTempRepository $orderInfoTempRepository,
         FCMNotificationsHandler $FCMNotificationsHandler,
-        InvoicesGenerator $invoicesGenerator
+        InvoicesGenerator $invoicesGenerator,
+        NotificationCheckerRepository $notificationCheckerRepository
     )
     {
         Config::set('jwt.user', Partner::class);
@@ -196,6 +213,7 @@ class PartnerOrdersController extends Controller
         $this->orderInfoTempRepository = $orderInfoTempRepository;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
         $this->invoicesGenerator = $invoicesGenerator;
+        $this->notificationCheckerRepository = $notificationCheckerRepository;
     }
 
     /**
@@ -273,14 +291,14 @@ class PartnerOrdersController extends Controller
      * ---> Enregistre la commande comme acceptée dans la table "orders_info" avec la colonne "incident" à true.
      * ---> Créer un nouvel incident dans la table "incidents" avec la variable "ResultMessage" comme enregistrement
      * dans la colonne "excuses" (ResultMessage = réponse payIn).
-     * ---> Prévient l'utilisateur de la situation via une push notification (FCMNotificationHandler).
+     * ---> Prévient l'utilisateur de la situation via une push notification (FCMNotificationHandler) puis enregistrement du status de la notification en bdd..
      * ---> /!\ enregistre "application_users.mango_card_id" à null.
      * ---> Prépare le tableau des commandes pour l'interface du partenaire.
      * ---> Déclenche l'évènement "orderHandledEvent" et envoi une confirmation de commande à l'utilisateur.
      * ---> Envoi un message de succès en JSON au partenaire.
      * --> Si SUCCES :
      * ---> Enregistre la commande comme acceptée dans la table "orders_info".
-     * ---> Prévient l'utilisateur de la situation via une push notification (FCMNotificationHandler).
+     * ---> Prévient l'utilisateur de la situation via une push notification (FCMNotificationHandler) puis enregistrement du status de la notification en bdd..
      * ---> Déclenche l'évènement "orderHandledEvent" et envoi une confirmation de commande REUSSIE à l'utilisateur.
      * ---> Envoi un message d'erreur en JSON au partenaire.
      *
@@ -296,14 +314,14 @@ class PartnerOrdersController extends Controller
      * ---> Créer un nouvel incident dans la table "incidents" avec la variable "ResultMessage" comme enregistrement
      * dans la colonne "excuses" (ResultMessage = réponse payIn).
      * ---> Prévient l'utilisateur à l'initiative de la demande de partage de la situation (échec de paiement) avec une
-     * push notification (FCMNotificationHandler).
+     * push notification (FCMNotificationHandler) puis enregistrement du status de la notification en bdd.
      * ---> Prépare le tableau des commandes pour l'envoyer à l'interface partenaire.
      * ---> Déclenche l'évènement "orderHandledEvent" et envoi une confirmation de commande ECHOUEE aux utilisateurs.
      * ---> Envoi un message de succès en JSON au partenaire.
      * --> Si SUCCES :
      * ---> Enregistre la commande comme acceptée dans la table "orders_info".
      * ---> Génère une facture.
-     * ---> Prévient les utilisateurs de la situation via une push notification (FCMNotificationHandler).
+     * ---> Prévient les utilisateurs de la situation via une push notification (FCMNotificationHandler) puis enregistrement du status de la notification en bdd.
      * ---> Déclenche l'évènement "orderHandledEvent" et envoi une confirmation de commande REUSSIE aux utilisateurs.
      * ---> Envoi un message de succès en JSON au partenaire.
      *
@@ -360,6 +378,7 @@ class PartnerOrdersController extends Controller
                     0,
                     null
                 );
+                $this->notificationCheckerRepository->newNotificationChecker($applicationUser->id, $orderInfo->partner_id, $orderInfo->id, $notificationStatus['result'], 'payment_failure');
 
                 $this->applicationUserRepository->setMangoCardIdToNull($orderInfo->applicationUser_id);
 
@@ -383,7 +402,7 @@ class PartnerOrdersController extends Controller
 
             $this->invoicesGenerator->generateApplicationUserInvoice($applicationUser->id, $orderInfo->id);
 
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser,
                 'Commande acceptée !',
@@ -392,6 +411,7 @@ class PartnerOrdersController extends Controller
                 0,
                 null
             );
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'accept');
 
             event(new  OrderHandledEvent($applicationUser, $partner, $orderInfo));
 
@@ -430,6 +450,7 @@ class PartnerOrdersController extends Controller
                     0,
                     null
                 );
+                $this->notificationCheckerRepository->newNotificationChecker($applicationUser_1->id, $orderInfo->partner_id, $orderInfo->id, $notificationStatus['result'], 'payment_failure');
 
                 $orderInfoTemp = $this->orderInfoTemp->where('partner_id', $partner->id)->get();
                 $orders = $this->ordersHandler->prepareArrayForPartnerClient($orderInfoTemp);
@@ -452,7 +473,7 @@ class PartnerOrdersController extends Controller
 
             $this->invoicesGenerator->generateApplicationUserInvoice($applicationUser_1->id, $orderInfo->id);
 
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser_1,
                 'Commande acceptée !',
@@ -461,8 +482,9 @@ class PartnerOrdersController extends Controller
                 0,
                 null
             );
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser_1->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'accept');
 
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser_2,
                 'Commande acceptée !',
@@ -471,6 +493,7 @@ class PartnerOrdersController extends Controller
                 0,
                 null
             );
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser_2->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'accept');
 
             event(new  OrderHandledEvent($applicationUser_1, $partner, $orderInfo));
 
@@ -508,7 +531,8 @@ class PartnerOrdersController extends Controller
 
         $orderInfo = $this->orderInfo->findOrFail($request['order_id']);
         $applicationUser = $this->applicationUser->findOrFail($request['applicationUser_id']);
-        $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+
+        $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
         (
             $applicationUser,
             'Commande prête !',
@@ -517,6 +541,7 @@ class PartnerOrdersController extends Controller
             0,
             ['behavior' => $orderInfo->orderId]
         );
+        $this->notificationCheckerRepository->newNotificationChecker($applicationUser->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'ready');
 
         return response()->json([
             'message' => 'La commande à bien été enregistrée comme délivrée ! Nous avons prévenue votre client que la commande est prête :)'
@@ -526,7 +551,7 @@ class PartnerOrdersController extends Controller
     /**
      * Cette fonction supprime la commande de la table temporaire : "orders_info_temp.
      * Enregistrement de la commande comme déclinée  dans la table "orders_info".
-     * Envoi d'une notification à l'utilisateur qui a passé la commande (FCMNotificationHandler).
+     * Envoi d'une notification à l'utilisateur qui a passé la commande (FCMNotificationHandler) puis enregistre le status de la notification en bdd.
      * Prépare et envoi les commandes restantes à l'interface partenaire.
      * Déclenche l'évènement "OrderHandledEvent" qui envoi le reçu à l'utilisateur.
      * Envoi un message JSON de succès à l'interface partenaire.
@@ -560,7 +585,8 @@ class PartnerOrdersController extends Controller
         $orderInfo = $this->orderInfo->findOrFail($request['order_id']);
 
         $applicationUser = $this->applicationUser->findOrFail($request['applicationUser_id']);
-        $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+
+        $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
         (
             $applicationUser,
             'Commande déclinée !',
@@ -569,6 +595,7 @@ class PartnerOrdersController extends Controller
             0,
             null
         );
+        $this->notificationCheckerRepository->newNotificationChecker($applicationUser->id, $orderInfo->partner_id, $orderInfo->id, $result['result'], 'ready');
 
         $orderInfoTemp = $this->orderInfoTemp->where('partner_id', $partner->id)->get();
         $orders = $this->ordersHandler->prepareArrayForPartnerClient($orderInfoTemp);

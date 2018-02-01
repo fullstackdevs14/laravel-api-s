@@ -6,6 +6,7 @@ use App\ApplicationUser;
 use App\Handlers\FCMNotifications\FCMNotificationsHandler;
 use App\OrderInfo;
 use App\OrderInfoShareBill;
+use App\Repositories\NotificationCheckerRepository;
 use App\Repositories\OrderInfoShareBillRepository;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -26,7 +27,7 @@ class CheckOrdersShareBill extends Command
      * Correspond au temps en minutes avant qu'une demande de partage soit expirée.
      * Cette constante est également utilisée dans les notifications envoyées à l'utilisateur grâce au contrôleur « ApplicationUserOrdersController ».
      */
-    const TIME_TO_LIVE_FOR_ORDERS = 10;
+    const TIME_TO_LIVE_FOR_ORDERS = 1;
 
 
     /**
@@ -96,6 +97,15 @@ class CheckOrdersShareBill extends Command
     private $orderInfoShareBillRepository;
 
     /**
+     * C'est un dépôt.
+     *
+     * Sert à l'enregistrement du status des notification.
+     *
+     * @var NotificationCheckerRepository
+     */
+    private $notificationCheckerRepository;
+
+    /**
      * Créer une nouvelle instance de commande.
      *
      * CheckOrdersShareBill constructeur.
@@ -104,6 +114,7 @@ class CheckOrdersShareBill extends Command
      * @param OrderInfoShareBill $orderInfoShareBill
      * @param FCMNotificationsHandler $FCMNotificationsHandler
      * @param OrderInfoShareBillRepository $orderInfoShareBillRepository
+     * @param NotificationCheckerRepository $notificationCheckerRepository
      */
     public function __construct
     (
@@ -111,7 +122,8 @@ class CheckOrdersShareBill extends Command
         ApplicationUser $applicationUser,
         OrderInfoShareBill $orderInfoShareBill,
         FCMNotificationsHandler $FCMNotificationsHandler,
-        OrderInfoShareBillRepository $orderInfoShareBillRepository
+        OrderInfoShareBillRepository $orderInfoShareBillRepository,
+        NotificationCheckerRepository $notificationCheckerRepository
     )
     {
         parent::__construct();
@@ -120,6 +132,7 @@ class CheckOrdersShareBill extends Command
         $this->orderInfoShareBill = $orderInfoShareBill;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
         $this->orderInfoShareBillRepository = $orderInfoShareBillRepository;
+        $this->notificationCheckerRepository = $notificationCheckerRepository;
     }
 
     /**
@@ -144,7 +157,7 @@ class CheckOrdersShareBill extends Command
             $applicationUser1 = $this->applicationUser->findOrFail($ordersInfo->applicationUser_id);
             $applicationUser2 = $this->applicationUser->findOrFail($ordersInfo->applicationUser_id_share_bill);
 
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser1,
                 'Commande annulée',
@@ -153,7 +166,9 @@ class CheckOrdersShareBill extends Command
                 0,
                 null
             );
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser1->id, $ordersInfo->partner_id, $ordersInfo->id, $result['result'], 'share_expire');
+
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser2,
                 'Commande annulée',
@@ -162,6 +177,8 @@ class CheckOrdersShareBill extends Command
                 0,
                 null
             );
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser2->id, $ordersInfo->partner_id, $ordersInfo->id, $result['result'], 'share_expire');
+
         }
     }
 

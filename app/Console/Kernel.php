@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\CheckOrdersShareBill',
         'App\Console\Commands\CheckPasswordResetTimeToLive',
         'App\Console\Commands\SendInvoices',
-        'App\Console\Commands\CheckEmailReplaceTimeToLive'
+        'App\Console\Commands\CheckEmailReplaceTimeToLive',
+        'App\Console\Commands\RemoveOldNotificationsRecords'
     ];
 
     /**
@@ -33,6 +34,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('password_reset:check')->everyMinute();
         $schedule->command('email_replace:check')->everyMinute();
         $schedule->command('send:invoices')->monthlyOn(4, '07:00');
+        $schedule->command('notifications_records:check')->daily();
     }
 
     /**

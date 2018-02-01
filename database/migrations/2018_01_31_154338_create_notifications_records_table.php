@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefundsTable extends Migration
+class CreateNotificationsRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRefundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('refunds', function (Blueprint $table) {
+        Schema::create('notifications_records', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamp('created_at');
             $table->bigInteger('applicationUser_id')->unsigned()->nullable();
@@ -21,8 +21,8 @@ class CreateRefundsTable extends Migration
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
-            $table->bigInteger('partner_id')->unsigned()->nullable();
-            $table->foreign('partner_id')
+            $table->bigInteger('partners_id')->unsigned()->nullable();
+            $table->foreign('partners_id')
                 ->references('id')
                 ->on('partners')
                 ->onDelete('set null');
@@ -31,18 +31,9 @@ class CreateRefundsTable extends Migration
                 ->references('id')
                 ->on('orders_info')
                 ->onDelete('set null');
-            $table->bigInteger('incident_id')->unsigned()->nullable();
-            $table->foreign('incident_id')
-                ->references('id')
-                ->on('incidents')
-                ->onDelete('set null');
-            $table->float('amount', 8, 2);
-            $table->boolean('success');
-            $table->mediumText('description');
-            $table->integer('mango_refund_id');
-
+            $table->boolean('notification_status');
+            $table->enum('type', ['accept', 'ready', 'decline', 'decline_expire', 'share_demand', 'share_accept', 'share_expire', 'share_decline', 'payment_failure']);
         });
-
     }
 
     /**
@@ -52,6 +43,6 @@ class CreateRefundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('refunds');
+        Schema::dropIfExists('notifications_records');
     }
 }

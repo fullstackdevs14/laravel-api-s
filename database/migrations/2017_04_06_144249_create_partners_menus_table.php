@@ -18,14 +18,14 @@ class CreatePartnersMenusTable extends Migration
 
             $table->timestamps();
 
-            $table->integer('partner_id')->unsigned();
+            $table->bigInteger('partner_id')->unsigned();
             $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->integer('category_id')->unsigned();
+            $table->bigInteger('category_id')->unsigned();
             $table->foreign('category_id')
                 ->references('id')
                 ->on('menu_categories');

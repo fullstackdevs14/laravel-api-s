@@ -9,6 +9,7 @@ use App\Handlers\FCMNotifications\FCMNotificationsHandler;
 use App\Handlers\Orders\OrdersHandler;
 use App\OrderInfoTemp;
 use App\Partner;
+use App\Repositories\NotificationCheckerRepository;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -93,6 +94,15 @@ class CheckOrders extends Command
     private $ordersHandler;
 
     /**
+     * C'est un dépôt.
+     *
+     * Sert à l'enregistrement du status des notification.
+     *
+     * @var NotificationCheckerRepository
+     */
+    private $notificationCheckerRepository;
+
+    /**
      * Créer une instance de nouvelle commande.
      *
      * CheckOrders constructor.
@@ -101,6 +111,7 @@ class CheckOrders extends Command
      * @param OrderInfoTemp $orderInfoTemp
      * @param FCMNotificationsHandler $FCMNotificationsHandler
      * @param OrdersHandler $ordersHandler
+     * @param NotificationCheckerRepository $notificationCheckerRepository
      */
     public function __construct
     (
@@ -108,7 +119,8 @@ class CheckOrders extends Command
         ApplicationUser $applicationUser,
         OrderInfoTemp $orderInfoTemp,
         FCMNotificationsHandler $FCMNotificationsHandler,
-        OrdersHandler $ordersHandler
+        OrdersHandler $ordersHandler,
+        NotificationCheckerRepository $notificationCheckerRepository
     )
     {
         parent::__construct();
@@ -117,6 +129,7 @@ class CheckOrders extends Command
         $this->orderInfoTemp = $orderInfoTemp;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
         $this->ordersHandler = $ordersHandler;
+        $this->notificationCheckerRepository = $notificationCheckerRepository;
     }
 
     /**
@@ -154,7 +167,7 @@ class CheckOrders extends Command
             /**
              * Envoi d'une notification à l'utilisateur.
              */
-            $this->FCMNotificationsHandler->sendNotificationToSpecificUser
+            $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser
             (
                 $applicationUser,
                 'Commande annulée',
@@ -163,6 +176,7 @@ class CheckOrders extends Command
                 0,
                 null
             );
+            $this->notificationCheckerRepository->newNotificationChecker($applicationUser->id, $partner->id, $order->order_id, $result['result'], 'decline_expire');
         }
     }
 
