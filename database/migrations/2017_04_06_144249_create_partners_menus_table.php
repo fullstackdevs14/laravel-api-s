@@ -25,7 +25,7 @@ class CreatePartnersMenusTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->bigInteger('category_id')->unsigned();
+            $table->integer('category_id')->unsigned();
             $table->foreign('category_id')
                 ->references('id')
                 ->on('menu_categories');
