@@ -27,7 +27,7 @@ class CheckOrdersShareBill extends Command
      * Correspond au temps en minutes avant qu'une demande de partage soit expirée.
      * Cette constante est également utilisée dans les notifications envoyées à l'utilisateur grâce au contrôleur « ApplicationUserOrdersController ».
      */
-    const TIME_TO_LIVE_FOR_ORDERS = 1;
+    const TIME_TO_LIVE_FOR_ORDERS = 15;
 
 
     /**
