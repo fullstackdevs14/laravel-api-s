@@ -388,8 +388,6 @@ class ApplicationUserController extends Controller
      *
      * --> Retourne un message de succès JSON avec l'utilisateur modifié en JSON.
      *
-     * TODO -- Mettre en place la modification de l'email.
-     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -445,6 +443,65 @@ class ApplicationUserController extends Controller
 
         return response()->json([
             'message' => 'Votre profil a bien été modifié :)',
+            'user' => $applicationUser,
+        ], 200);
+    }
+
+    /**
+     * Cette fonction gère la mise à jour de la photo de profil d'un utilisateur.
+     *
+     * --> Valide les information envoyées dans la requête.
+     * --> Sauvegarde la photo de profil si celle-ci est pésente.
+     * --> Supprime la photo de profil présente sur le serveur.
+     * --> Enregistre les informations modifiées sur la base de données application.
+     *
+     * --> Retourne un message de succès JSON avec l'utilisateur modifié en JSON.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfilePicture
+    (
+        Request $request
+    )
+    {
+        $applicationUser = $this->applicationUserRepository->getApplicationUserFromToken();
+
+        $this->validate($request, [
+            'base64' => 'string',
+        ]);
+
+        /**
+         * Gère les images jpg/base64.
+         */
+        if ($request->hasFile('picture')) {
+            $picture = $request->file('picture');
+            $filename = time() . '.' . $picture->getClientOriginalExtension();
+            Image::make($picture)->save(storage_path('app/public/uploads/application_users_img/' . $filename));
+        }
+
+        if (isset($request['base64']) && $request['base64'] !== null) {
+            $data = $request['base64'];
+            $filename = time() . '.jpeg';
+            $data = explode(',', $data);
+            $data = base64_decode($data[1]);
+            file_put_contents(storage_path('app/public/uploads/application_users_img/' . $filename), $data);
+        }
+
+        if (isset($request['base64']) AND !empty($request['base64']) OR $request->hasFile('picture')) {
+            File::delete(storage_path('app/public/uploads/application_users_img/' . $applicationUser->picture));
+            $applicationUser->picture = $filename;
+        }
+
+
+        $applicationUser->save();
+
+        if (isset($applicationUser['picture'])) {
+            $applicationUser['picture'] = Config::get('constants.base_url_application_user') . $applicationUser['picture'];
+        }
+
+        return response()->json([
+            'message' => 'Votre photo de profil a bien été modifié :)',
             'user' => $applicationUser,
         ], 200);
     }

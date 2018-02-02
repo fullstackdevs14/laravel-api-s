@@ -44,6 +44,7 @@ class ResetPasswordController extends Controller
     /**
      * ResetPasswordController constructor.
      * @param ApplicationUser $applicationUser
+     * @param ApplicationUserRepository $applicationUserRepository
      * @param ApplicationUserResetPassword $applicationUserResetPassword
      */
     public function __construct
@@ -160,14 +161,9 @@ class ResetPasswordController extends Controller
             return view('applicationUsers_not_back_office.message', compact('message', 'base_url'));
         }
 
-        $applicationUser = $this->applicationUserRepository->getApplicationUserFromToken();
+        $tokenDB = $this->applicationUserResetPassword->where('token', $request->token)->get()->first();
 
-        $tokenDB = $this->applicationUserResetPassword->where('applicationUser_id', $applicationUser->id)->get()->first();
-
-        if($request->token != $tokenDB->token){
-            $message = 'Demande invalide ou expirée.';
-            return view('applicationUsers_not_back_office.message', compact('message', 'base_url'));
-        }
+        $applicationUser = $this->applicationUser->findOrFail($tokenDB->applicationUser_id);
 
         $tokenDB->delete();
         $applicationUser->password = bcrypt($request->password);
@@ -175,7 +171,6 @@ class ResetPasswordController extends Controller
 
         $message = 'Mot de passe modifié :)';
         return view('applicationUsers_not_back_office.message', compact('message', 'base_url'));
-
     }
 
 }

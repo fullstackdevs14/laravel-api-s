@@ -72,6 +72,7 @@ Route::group(['middleware' => ['jwt.applicationUser']], function () {
 
     Route::get('/applicationUserLogout', 'API\ApplicationUsers\ApplicationUserController@logout');
     Route::post('/applicationUserUpdate', 'API\ApplicationUsers\ApplicationUserController@update');
+    Route::post('/applicationUserUpdateProfilePicture', 'API\ApplicationUsers\ApplicationUserController@updateProfilePicture');
 
     Route::post('/applicationUserNewEmail', 'API\ApplicationUsers\EmailReplaceController@newEmailRequest');
 
