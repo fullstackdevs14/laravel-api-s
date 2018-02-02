@@ -2,9 +2,14 @@
 
 namespace App\Repositories;
 
-
 use App\NotificationChecker;
 
+/**
+ * Cette classe est un gestionnaire.
+ *
+ * Class NotificationCheckerRepository
+ * @package App\Repositories
+ */
 class NotificationCheckerRepository
 {
     /**
@@ -33,6 +38,10 @@ class NotificationCheckerRepository
         $type
     )
     {
+        if(empty($notification_status)){
+            $notification_status = false;
+        }
+
         $notificationChecker = $this->notificationChecker->create([
             'applicationUser_id' => $applicationUser_id,
             'partners_id' => $partner_id,
