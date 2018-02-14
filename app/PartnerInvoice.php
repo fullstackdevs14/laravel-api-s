@@ -24,6 +24,7 @@ class PartnerInvoice extends Model
             'partner_id',
             'invoice_id',
             'from',
-            'to'
+            'to',
+            'invoice_type'
         ];
 }

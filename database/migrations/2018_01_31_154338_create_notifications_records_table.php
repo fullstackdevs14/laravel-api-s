@@ -21,8 +21,8 @@ class CreateNotificationsRecordsTable extends Migration
                 ->references('id')
                 ->on('application_users')
                 ->onDelete('set null');
-            $table->bigInteger('partners_id')->unsigned()->nullable();
-            $table->foreign('partners_id')
+            $table->bigInteger('partner_id')->unsigned()->nullable();
+            $table->foreign('partner_id')
                 ->references('id')
                 ->on('partners')
                 ->onDelete('set null');
@@ -31,6 +31,7 @@ class CreateNotificationsRecordsTable extends Migration
                 ->references('id')
                 ->on('orders_info')
                 ->onDelete('set null');
+            $table->string('orderId' ,5);
             $table->boolean('notification_status');
             $table->enum('type', ['accept', 'ready', 'decline', 'decline_expire', 'share_demand', 'share_accept', 'share_expire', 'share_decline', 'payment_failure']);
         });

@@ -291,7 +291,7 @@ class PartnerController extends Controller
             $filename = time() . '.' . $picture->getClientOriginalExtension();
             Image::make($picture)->save(storage_path('app/public/uploads/partners_img/' . $filename));
         } else {
-            $filename = false;
+            $filename = $this->partner->findOrFail($partner_id)->picture;
         }
 
         $this->partnerRepository->updatePartner($partner_id, $request, $filename);

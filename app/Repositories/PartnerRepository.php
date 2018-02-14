@@ -76,7 +76,7 @@ class PartnerRepository
             'tel' => $tel,
             'ownerFirstName' => $ownerFirstName,
             'ownerLastName' => $ownerLastName,
-            'password' => $password,
+            'password' => bcrypt($password),
             'name' => $name,
             'category' => $category,
             'address' => $address,

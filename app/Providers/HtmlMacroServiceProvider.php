@@ -42,7 +42,7 @@ class HtmlMacroServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Ok.
      */
     private function registerFormControl()
     {
@@ -67,7 +67,7 @@ class HtmlMacroServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Request old impossible sur un fichier text.
      */
     private function registerFormFileInput()
     {
@@ -96,7 +96,7 @@ class HtmlMacroServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Ok.
      */
     private function registerFormSelectFromDB()
     {
@@ -128,7 +128,7 @@ class HtmlMacroServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * A tester.
      */
     private function registerFormSelectFromDBSelected()
     {
@@ -136,15 +136,28 @@ class HtmlMacroServiceProvider extends ServiceProvider
             $options = null;
             $errors->has($name1) ? $errClass = 'has-error' : $errClass = '';
             $errorMsg = $errors->first($name2, '<small class="help-block" style="color:red">:message</small>');
-            foreach ($collection as $item) {
-                $used = null;
-                $options = $options . '<option value="' . $item->$keyOptionValue . '"';
-                if ($sentItem->$keyItemValue == (!$keyOptionValue ? $item : $item->$keyOptionValue)) {
-                    $used = 1;
-                    $options = $options . 'selected="selected"';
+
+            $value = \Request::old($name2) ? \Request::old($name2) : null;
+
+            if ($value === null) {
+                foreach ($collection as $item) {
+                    $used = null;
+                    $options = $options . '<option value="' . $item->$keyOptionValue . '"';
+                    if ($sentItem->$keyItemValue == (!$keyOptionValue ? $item : $item->$keyOptionValue)) {
+                        $used = 1;
+                        $options = $options . 'selected="selected"';
+                    }
+                    $options = $options . '>' . $item->$keyItemLabel . '</option>';
+                    if ($used === null) {
+                    }
                 }
-                $options = $options . '>' . $item->$keyItemLabel . '</option>';
-                if ($used === null) {
+            } else {
+                foreach ($collection as $item) {
+                    if (\Request::old($name2) != $item->$keyOptionValue) {
+                        $options = $options . '<option value="' . $item->$keyOptionValue . '">' . $item->$keyItemLabel . '</option>';
+                    } else {
+                        $options = $options . '<option value="' . $item->$keyOptionValue . '" selected>' . $item->$keyItemLabel . '</option>';
+                    }
                 }
             }
             return
@@ -260,7 +273,7 @@ class HtmlMacroServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Ok.
      */
     private function registerFormSelect2ChoicesSelected()
     {
@@ -268,13 +281,27 @@ class HtmlMacroServiceProvider extends ServiceProvider
             $options = null;
             $errors->has($name) ? $errClass = 'has-error' : $errClass = '';
             $errorMsg = $errors->first($name, '<small class="help-block" style="color:red">:message</small>');
-            if ($item->$name == 1 || $item->$name == '1') {
-                $options = '<option value="1" selected="selected">' . $labelTrue . '</option>
+
+            $value = \Request::old($name) ? \Request::old($name) : null;
+
+            if ($value === null) {
+                if ($item->$name === 1 || $item->$name === '1' || $item->name === true) {
+                    $options = '<option value="1" selected="selected">' . $labelTrue . '</option>
                             <option value="0">' . $labelFalse . '</option>';
-            } else {
-                $options = '<option value="1">' . $labelTrue . '</option>
+                } else {
+                    $options = '<option value="1">' . $labelTrue . '</option>
                 <option value="0" selected="selected">' . $labelFalse . '</option>';
+                }
+            } else {
+                if ($value === 1 || $value == '1') {
+                    $options = '<option value="1" selected="selected">' . $labelTrue . '</option>
+                            <option value="0">' . $labelFalse . '</option>';
+                } else {
+                    $options = '<option value="1">' . $labelTrue . '</option>
+                <option value="0" selected="selected">' . $labelFalse . '</option>';
+                }
             }
+
             return
                 '<div class="row">
                     <div class="col-sm-10 col-sm-offset-1">

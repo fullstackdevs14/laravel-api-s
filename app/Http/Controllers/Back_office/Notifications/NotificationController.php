@@ -295,6 +295,10 @@ class NotificationController extends Controller
         return view('notifications.infos', compact('response'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function listNotificationsStatus
     (
         Request $request
@@ -302,13 +306,13 @@ class NotificationController extends Controller
     {
         $notifications = $this->notificationChecker->where(function ($query) use ($request) {
             if (($search = $request->get('search'))) {
-                $query->orWhere('id', 'like', '%' . $search . '%');
+                $query->orWhere('orderId', 'like', '%' . $search . '%');
             }
         })->orderBy('created_at', 'desc')->paginate(15);
 
         $links = $notifications->appends(Input::except('page'))->render();
 
-        return view('list_notifications_status.index', compact('notifications', 'links'));
+        return view('notifications.notifications_status.index', compact('notifications', 'links'));
     }
 
 }

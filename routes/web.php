@@ -161,11 +161,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/notification/statusList', 'Back_office\Notifications\NotificationController@listNotificationsStatus')->name('list_notifications_status.index');
 
     /**
-     * Leads
-     */
-    Route::get('/leads', 'Back_office\Others\GetLeadController@index')->name('leads.index');
-
-    /**
      * MangoPay
      */
 

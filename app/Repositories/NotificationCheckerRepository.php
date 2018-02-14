@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\NotificationChecker;
+use App\OrderInfo;
 
 /**
  * Cette classe est un gestionnaire.
@@ -38,14 +39,15 @@ class NotificationCheckerRepository
         $type
     )
     {
-        if(empty($notification_status)){
+        if (empty($notification_status)) {
             $notification_status = false;
         }
 
         $notificationChecker = $this->notificationChecker->create([
             'applicationUser_id' => $applicationUser_id,
-            'partners_id' => $partner_id,
+            'partner_id' => $partner_id,
             'order_id' => $order_id,
+            'orderId' => OrderInfo::findOrFail($order_id)->orderId,
             'notification_status' => $notification_status,
             'type' => $type
         ]);

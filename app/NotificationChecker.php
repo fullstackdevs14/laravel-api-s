@@ -22,8 +22,9 @@ class NotificationChecker extends Model
     protected $fillable =
         [
             'applicationUser_id',
-            'partners_id',
+            'partner_id',
             'order_id',
+            'orderId',
             'notification_status',
             'type'
         ];

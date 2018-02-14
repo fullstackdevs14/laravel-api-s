@@ -13,41 +13,33 @@
     <table class="table">
         <thead>
         <tr>
-            <th>#</th>
-            <th>Avatar</th>
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Actif</th>
-            <th></th>
-            <th></th>
+            <th class="text-left">Création</th>
+            <th class="text-center">Prenom</th>
+            <th class="text-center">Nom</th>
+            <th class="text-center">Partenaire</th>
+            <th class="text-center">Numéro de commande</th>
+            <th class="text-center">Statut</th>
+            <th class="text-right">Type</th>
         </tr>
         </thead>
         <tbody>
-        @foreach ($applicationUsers as $user)
+        @foreach($notifications as $notification)
+            <?php $applicationUser = \App\ApplicationUser::findOrFail($notification->applicationUser_id) ?>
+            <?php $partner = \App\Partner::findOrFail($notification->partner_id) ?>
+            <?php $orderInfo = \App\OrderInfo::findOrFail($notification->order_id) ?>
+
             <tr>
-                <td style="vertical-align: middle">{{ $user->id }}</td>
-                <td style="vertical-align: middle">
-                    @if($user->photoPath != null)
-                        <div class="avatar">
-                            <img src="{{ $user->photoPath }}" />
-                        </div>
-                    @else
-                        <span class="glyphicon glyphicon-user"></span>
-                    @endif
-                </td>
-                <td style="vertical-align: middle" class="text-default">{{ $user->firstName }}</td>
-                <td style="vertical-align: middle" class="text-default">{{ $user->lastName }}</td>
-                <td style="vertical-align: middle" class="text-default">{{ $user->email }}</td>
-                <td style="vertical-align: middle" class="text-default">
-                    @if($user->activated)
-                        Actif
-                    @else
-                        Inactif
-                    @endif
-                </td>
-                <td style="vertical-align: middle">{{ link_to_route('applicationUser.show', 'Voir', [$user->id], ['class' => 'btn btn-default']) }}</td>
-                <td style="vertical-align: middle">{{ link_to_route('applicationUser.edit', 'Modifier', [$user->id], ['class' => 'btn btn-default']) }}</td>
+                <td class="text-left">{{ $notification->created_at }}</td>
+                <td class="text-center">{{ $applicationUser->firstName }}</td>
+                <td class="text-center">{{ $applicationUser->lastName }}</td>
+                <td class="text-center">{{ $partner->name }}</td>
+                <td class="text-center">{{ $orderInfo->orderId }}</td>
+                @if($notification->notification_status == true)
+                    <td class="text-center" style="color: green">SUCCESS</td>
+                @else
+                    <td class="text-center" style="color: red">ERROR</td>
+                @endif
+                <td class="text-right">{{ $notification->type }}</td>
             </tr>
         @endforeach
         </tbody>

@@ -24,7 +24,7 @@ class CreatePartnersInvoicesTable extends Migration
             $table->date('from');
             $table->date('to');
             $table->text('invoice_id');
-            $table->enum('type', ['invoice', 'credit']);
+            $table->enum('invoice_type', ['invoice', 'credit']);
         });
     }
 

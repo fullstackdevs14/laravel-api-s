@@ -94,29 +94,6 @@
                 </div>
             </div>
 
-            <!-- Leads section -->
-        <!--
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span
-                                    class="glyphicon glyphicon-grain">
-                            </span> - Leads</a>
-                    </h4>
-                </div>
-                <div id="collapseFour" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    {{ link_to_route('leads.index','Voir leads sipperapp.com') }}
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
-</div>
--->
             <!-- Notificaitions section -->
 
             <div class="panel panel-default">
