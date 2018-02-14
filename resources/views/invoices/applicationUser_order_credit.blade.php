@@ -54,7 +54,7 @@
     <table>
         <tr class="no-border">
             <td class="no-border"><h3>{{ \Illuminate\Support\Facades\Config::get('constants.company_name') }}
-                    - Facture n° {{ $invoice_id }}</h3>
+                    - Avoir n° {{ $invoice_id }}</h3>
             </td>
             <td class="no-border" style="text-align: right; vertical-align: text-top;">
                 <img src="{{ public_path('img/Sipper-logo.svg') }}" alt="logo"
@@ -81,7 +81,7 @@
             <br/>
 
             <strong>Date d'émission:</strong><br>
-            {{ $orderInfo->updated_at }}<br>
+            {{ $created_at }}<br>
         </td>
     </tr>
 </table>
@@ -89,71 +89,46 @@
 <br/>
 <br/>
 
-<h3><strong>Détails de la commande :</strong></h3>
+<h3><strong>Détails de l'avoir :</strong></h3>
 <table>
     <thead>
     <tr class="slight-bg-color">
-        <td width="12.5%" class="text-left"><strong>Item</strong></td>
-        <td width="9%" class="text-center"><strong>Happy Hour</strong></td>
-        <td width="9%" class="text-center"><strong>Prix TTC</strong></td>
-        <td width="9%" class="text-center"><strong>Quantité</strong></td>
-        <td width="9%" class="text-center"><strong>Total TTC</strong></td>
-        <td width="9%" class="text-center"><strong>TVA</strong></td>
-        <td width="9%" class="text-center"><strong>Total HT</strong></td>
+        <td width="30%" class="text-left"><strong>Description</strong></td>
+        <td width="15%" class="text-center"><strong>N° de la facture d'origine</strong></td>
+        <td width="15%" class="text-center"><strong>Date de la facture d'origine</strong></td>
+        <td width="10%" class="text-center"><strong>Montant de la facture d'origine</strong></td>
+        <td width="10%" class="text-center"><strong>TVA de la facture d'origine</strong></td>
+        <td width="10%" class="text-center"><strong>% de remise sur la facture d'origine</strong></td>
+        <td width="10%" class="text-center"><strong>Montant de l'avoir</strong></td>
     </tr>
     </thead>
+    <tr>
+        <td class="text-left">Motif : {{ $request->description }}</td>
+        <td class="text-center"> {{ $initialInvoice->invoice_id }} </td>
+        <td class="text-center"> {{ $initialInvoice->created_at }} </td>
+        <td class="text-center"> {{ number_format($total, 2) }} €</td>
+        <td class="text-center"> {{ number_format($vat, 2) }} €</td>
+        <td class="text-center"> {{ number_format((100 * $request->amount / $total) , 2) }} %</td>
+        <td class="text-center"> {{ number_format($request->amount,2) }} €</td>
+    </tr>
     <tbody>
-    @foreach($orders as $order)
-        <tr>
-            <td class="text-left">{{ $order['itemName'] }}</td>
-
-            @if($order['HHStatus'] == 1)
-                <td class="text-center">Oui</td>
-            @else
-                <td class="text-center">Non</td>
-            @endif
-
-            @if($order['HHStatus'] == 1)
-                <td class="text-center">{{ $order['itemHHPrice'] }} €</td>
-            @else
-                <td class="text-center">{{ $order['itemPrice'] }} €</td>
-            @endif
-
-            <td class="text-center">{{ $order['quantity'] }}</td>
-
-            @if($order['HHStatus'] == 1)
-                <td class="text-center">{{ number_format($order['itemHHPrice'] * $order['quantity'], 2) }}€</td>
-            @else
-                <td class="text-center">{{ number_format($order['itemPrice'] * $order['quantity'], 2) }}€</td>
-            @endif
-
-            <td class="text-center">{{ $order['tax'] }} %</td>
-
-            @if($order['HHStatus'] == 1)
-                <td class="text-center">{{ number_format(\App\Handlers\Invoices\VATCalculator::get_ht_amount_from_ttc_and_tax(($order['itemHHPrice'] * $order['quantity']), $order['tax']),2) }}
-                    €
-                </td>
-            @else
-                <td class="text-center">{{ number_format(\App\Handlers\Invoices\VATCalculator::get_ht_amount_from_ttc_and_tax(($order['itemPrice'] * $order['quantity']), $order['tax']),2) }}
-                    €
-                </td>
-            @endif
-        </tr>
-    @endforeach
     <tr class="no-border">
         <td colspan="5" class="no-border"></td>
         <td class="text-center no-border">Total HT</td>
-        <td class="text-center no-border">{{number_format($total - $vat,2)}} €</td>
+        <td class="text-center no-border">
+            - {{ number_format(($request->amount - ($vat * $request->amount / $total)), 2)}}
+            €
+        </td>
     </tr>
     <tr class="no-border">
         <td colspan="5" class="no-border"></td>
         <td class="text-center no-border">Total TVA</td>
-        <td class="text-center no-border">{{ number_format($vat, 2) }} €</td>
+        <td class="text-center no-border">- {{ number_format(($vat * $request->amount / $total), 2) }} €</td>
     </tr>
     <tr class="no-border">
         <td colspan="5" class="no-border"></td>
         <td class="text-center no-border">Total TTC</td>
-        <td class="text-center no-border">{{ number_format($total, 2) }} €</td>
+        <td class="text-center no-border">- {{ number_format($request->amount, 2) }} €</td>
     </tr>
     </tbody>
 </table>

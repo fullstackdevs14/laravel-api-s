@@ -191,6 +191,8 @@ return [
         Intervention\Validation\ValidationServiceProvider::class,
 
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
     ],
 
     /*
@@ -250,6 +252,8 @@ return [
         'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
 
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+
+        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
     ],
 
 ];

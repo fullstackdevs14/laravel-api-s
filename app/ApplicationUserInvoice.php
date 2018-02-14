@@ -24,5 +24,6 @@ class ApplicationUserInvoice extends Model
             'applicationUser_id',
             'order_id',
             'invoice_id',
+            'invoice_type'
         ];
 }

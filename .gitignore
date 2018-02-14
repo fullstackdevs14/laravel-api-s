@@ -1,3 +1,6 @@
+storage/framework/views/*
+storage/framework/sessions/*
+
 /node_modules
 /public/hot
 /public/storage

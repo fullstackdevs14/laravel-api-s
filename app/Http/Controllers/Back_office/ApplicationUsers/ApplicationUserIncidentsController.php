@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Back_office\ApplicationUsers;
 
 use App\ApplicationUser;
+use App\ApplicationUserInvoice;
+use App\Handlers\Invoices\InvoicesGenerator;
 use App\Handlers\MangoPay\MangoPayHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IncidentsMonitoringRequest;
@@ -137,6 +139,22 @@ class ApplicationUserIncidentsController extends Controller
     private $nbrPerPage = 15;
 
     /**
+     * C'est un gestionnaire.
+     *
+     * Permet de génèrer les factures.
+     *
+     * @var InvoicesGenerator
+     */
+    private $invoicesGenerator;
+
+    /**
+     * C'est un model.
+     *
+     * @var ApplicationUserInvoice
+     */
+    private $applicationUserInvoice;
+
+    /**
      * ApplicationUserIncidentsController constructor.
      * @param Refund $refund
      * @param Incident $incident
@@ -150,6 +168,8 @@ class ApplicationUserIncidentsController extends Controller
      * @param IncidentMonitoring $incidentMonitoring
      * @param OrderInfoRepository $orderInfoRepository
      * @param ApplicationUserRepository $applicationUserRepository
+     * @param InvoicesGenerator $invoicesGenerator
+     * @param ApplicationUserInvoice $applicationUserInvoice
      */
     public function __construct
     (
@@ -164,7 +184,9 @@ class ApplicationUserIncidentsController extends Controller
         IncidentRepository $incidentRepository,
         IncidentMonitoring $incidentMonitoring,
         OrderInfoRepository $orderInfoRepository,
-        ApplicationUserRepository $applicationUserRepository
+        ApplicationUserRepository $applicationUserRepository,
+        InvoicesGenerator $invoicesGenerator,
+        ApplicationUserInvoice $applicationUserInvoice
     )
     {
         $this->refund = $refund;
@@ -179,6 +201,8 @@ class ApplicationUserIncidentsController extends Controller
         $this->incidentMonitoring = $incidentMonitoring;
         $this->orderInfoRepository = $orderInfoRepository;
         $this->applicationUserRepository = $applicationUserRepository;
+        $this->invoicesGenerator = $invoicesGenerator;
+        $this->applicationUserInvoice = $applicationUserInvoice;
     }
 
     /**
@@ -543,13 +567,24 @@ class ApplicationUserIncidentsController extends Controller
             $request->amount,
             $status,
             $description,
-            $results->Id);
+            $results->Id
+        );
+
+        if ($status == true) {
+            $initialInvoice = $this->applicationUserInvoice->where('order_id', $orderInfo->id)
+                ->where('applicationUser_id', $applicationUser->id)
+                ->where('invoice_type', 'invoice')
+                ->get()
+                ->first();
+
+            $this->invoicesGenerator->generateApplicationUserCredit($applicationUser, $initialInvoice, $results, $request);
+        }
 
         if ($results->Status === "SUCCEEDED") {
             Session::flash('message', "Le remboursement a bien été éffectué.");
             Session::flash('error', "Penser à créer un mémo sur la fiche incident de l'utilisateur pour justifier le remboursement.");
         } else {
-            Session::flash('error', "Une erreur est survenue. Voir l'historique de la fiche remboursement (ci-dessous).");
+            Session::flash('error', "Une erreur est survenue. Voir l'historique de la fiche remboursement (ci-dessous). La facture n\a pas été générée.");
         }
 
         return redirect()->route('applicationUser_incident_refund.show', ['order_is' => $orderInfo->id]);
@@ -612,8 +647,8 @@ class ApplicationUserIncidentsController extends Controller
         } elseif ($request['applicationUser_id'] == $orderInfo->applicationUser_id_share_bill) {
             $payInId = $orderInfo->payInId_share_bill;
         } else {
-            // TODO -- Vérifier la gestion des erreurs.
-            dd('Erreur: le payin id renseigné est incorrect...');
+            Session::flash('error', "Le payInId est incorrect.");
+            return redirect()->route('applicationUser_incident_refund.show', ['order_is' => $orderInfo->id]);
         }
 
         $results = $this->mangoPayHandler->refundSharedBill($this->mangoPayApi, $orderInfo, $payInId, $applicationUser, $request->amount);
@@ -633,7 +668,18 @@ class ApplicationUserIncidentsController extends Controller
             $request->amount,
             $status,
             $description,
-            $results->Id);
+            $results->Id
+        );
+
+        if ($status == true) {
+            $initialInvoice = $this->applicationUserInvoice->where('order_id', $orderInfo->id)
+                ->where('applicationUser_id', $applicationUser->id)
+                ->where('invoice_type', 'invoice')
+                ->get()
+                ->first();
+
+            $this->invoicesGenerator->generateApplicationUserCredit($applicationUser, $initialInvoice, $results, $request);
+        }
 
         if ($results->Status === "SUCCEEDED") {
             Session::flash('message', "Le remboursement a bien été éffectué.");

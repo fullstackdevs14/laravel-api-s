@@ -22,12 +22,6 @@ class XSSProtection
 
         $input = $request->all();
 
-        //foreach ($input as $key => $value) {
-        //    if (preg_match('/script/', $value)) {
-        //        return response()->json(['error' => "Nous ne somme qu'une petite startup :/ Postule plutot chez nous pour nous aider à grimper."], 418);
-        //    }
-        //}
-
         array_walk_recursive($input, function (&$input) {
             $input = strip_tags($input);
         });

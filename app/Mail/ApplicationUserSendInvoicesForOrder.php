@@ -23,10 +23,6 @@ class ApplicationUserSendInvoicesForOrder extends Mailable implements ShouldQueu
      * @var OrderInfo
      */
     public $orderInfo;
-    /**
-     * @var ApplicationUserInvoice
-     */
-    private $applicationUserInvoice;
 
     /**
      * ApplicationUserSendInvoicesForOrder constructor.

@@ -410,11 +410,9 @@ class MangoPayHandler
         $payIn->PaymentType = PayInPaymentType::Card;
         $payIn->PaymentDetails = new PayInPaymentDetailsCard();
         $payIn->DebitedFunds = new Money();
-        //TODO: allow to change currency.
         $payIn->DebitedFunds->Currency = "EUR";
         $payIn->DebitedFunds->Amount = $amount * 100;
         $payIn->Fees = new Money();
-        //TODO: allow to change currency.
         $payIn->Fees->Currency = "EUR";
         $payIn->Fees->Amount = $amount * $partner->fees;
         $payIn->ExecutionType = PayInExecutionType::Direct;

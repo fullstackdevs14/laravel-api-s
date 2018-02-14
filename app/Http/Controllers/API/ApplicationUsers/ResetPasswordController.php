@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\ApplicationUsers;
 use App\ApplicationUser;
 use App\ApplicationUserResetPassword;
 use App\Events\ApplicationUserResetPasswordEvent;
-use App\Handlers\ToolsHandler;
 use App\Http\Controllers\Controller;
 use App\Repositories\ApplicationUserRepository;
 use Illuminate\Http\Request;
@@ -99,7 +98,7 @@ class ResetPasswordController extends Controller
 
         return response()->json([
             'message' => 'Un email vient de vous être envoyé pour réinitialiser votre mot de passe :)'
-        ],200);
+        ], 200);
     }
 
     /**
@@ -153,8 +152,6 @@ class ResetPasswordController extends Controller
             'token' => 'required|string|exists:application_users_reset_password,token',
         ];
 
-        $base_url = ToolsHandler::getBaseUrl();
-
         $validation = Validator::make(['token' => $request->token], $rules);
         if ($validation->fails()) {
             $message = 'Demande invalide ou expirée.';
@@ -170,7 +167,7 @@ class ResetPasswordController extends Controller
         $applicationUser->save();
 
         $message = 'Mot de passe modifié :)';
-        return view('applicationUsers_not_back_office.message', compact('message', 'base_url'));
+        return view('applicationUsers_not_back_office.message', compact('message'));
     }
 
 }

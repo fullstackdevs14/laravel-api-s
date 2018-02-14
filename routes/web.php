@@ -15,7 +15,8 @@
 Route::get('/documentation', function () {
     //return phpinfo();
     return File::get('/home/thomas/www/api/Documentation/index.html');
-});Route::get('/11f2b0fa2f7edc4425a0bc912110fc9f.txt', function () {
+});
+Route::get('/11f2b0fa2f7edc4425a0bc912110fc9f.txt', function () {
     //return phpinfo();
     return File::get('/home/thomas/www/11f2b0fa2f7edc4425a0bc912110fc9f.txt');
 });
@@ -156,6 +157,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/notification/targeted_user/form', 'Back_office\Notifications\NotificationController@targetedUserNotificationForm')->name('targeted_user.notification.form');
     Route::post('/notification/targeted_group/send', 'Back_office\Notifications\NotificationController@targetedGroupNotificationSend')->name('targeted_group.notification.send');
     Route::post('/notification/targeted_user/send', 'Back_office\Notifications\NotificationController@targetedUserNotificationSend')->name('targeted_user.notification.send');
+
+    Route::get('/notification/statusList', 'Back_office\Notifications\NotificationController@listNotificationsStatus')->name('list_notifications_status.index');
+
     /**
      * Leads
      */
@@ -184,6 +188,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('list_of_feeds', 'Back_office\Communication\NewsController@index')->name('rss_feeds');
     Route::get('fb_post', 'Back_office\Communication\NewsController@onGoToFB')->name('fb_post');
 });
+
+Route::get('partner_subscription', 'Web\PartnerSubscriptionController@getForm');
+Route::post('partner_subscription', 'Web\PartnerSubscriptionController@store')->name('partner_subscription.store');
 
 Route::get('mangoPay_hook_error', 'Back_office\MangoPay\HooksController@triggerErrorEvent');
 

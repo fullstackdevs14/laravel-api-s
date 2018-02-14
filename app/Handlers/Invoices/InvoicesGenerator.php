@@ -12,6 +12,7 @@ use App\Refund;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use MangoPay\MangoPayApi;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
@@ -245,7 +246,87 @@ class InvoicesGenerator
             $pdf->save(storage_path('app/public/uploads/invoices/application_users/') . $invoice_id . '.pdf');
 
         }
+    }
 
+    /**
+     * @param $applicationUser
+     * @param $initialInvoice
+     * @param $refundResults
+     * @param $request
+     */
+    public function generateApplicationUserCredit
+    (
+        $applicationUser,
+        $initialInvoice,
+        $refundResults,
+        $request
+    )
+    {
+        $created_at = Carbon::createFromTimestamp($refundResults->CreationDate);
+
+        $orders = $this->orderInfo
+            ->where('applicationUser_id', $applicationUser->id)
+            ->where('accepted', true)
+            ->where('order_id', $initialInvoice->order_id)
+            ->join('orders', 'orders_info.id', '=', 'orders.order_id')
+            ->get([
+                'order_id',
+                'orderId',
+                'created_at',
+                'itemName',
+                'itemPrice',
+                'itemHHPrice',
+                'HHStatus',
+                'tax',
+                'alcohol',
+                'quantity',
+                'fees',
+            ])->toArray();
+
+        $total = 0;
+        $vat = 0;
+        foreach ($orders as $order) {
+            if ($order['HHStatus'] == 1) {
+                $total += $order['itemHHPrice'] * $order['quantity'];
+                $vat += $this->VATCalculator->get_vat_amount_from_ttc_and_tax(($order['itemHHPrice'] * $order['quantity']), $order['tax']);
+            } else {
+                $total += $order['itemPrice'] * $order['quantity'];
+                $vat += $this->VATCalculator->get_vat_amount_from_ttc_and_tax(($order['itemPrice'] * $order['quantity']), $order['tax']);
+            }
+        }
+
+        do {
+            $result = DB::select('SELECT id FROM application_users_invoices ORDER BY id DESC LIMIT 1');
+            if (isset($result) && !empty($result)) {
+                $last_insert_id = $result[0]->id + 1;
+            } else {
+                $last_insert_id = 1;
+            }
+            $invoice_id = 'C' . Carbon::now()->year . '-' . str_pad($last_insert_id, 7, "0", STR_PAD_LEFT);
+        } while (!$this->applicationUserInvoice->where('invoice_id', '=', $invoice_id)->get()->isEmpty());
+
+        $this->applicationUserInvoice->create([
+            'applicationUser_id' => $applicationUser->id,
+            'order_id' => $initialInvoice->order_id,
+            'invoice_id' => $invoice_id,
+            'invoice_type' => 'credit'
+        ])->save();
+
+        $pdf = PDF::loadView(
+            'invoices.applicationUser_order_credit',
+            compact('applicationUser', 'initialInvoice', 'request', 'invoice_id', 'created_at', 'total', 'vat'),
+            [],
+            [
+                'format' => 'A4',
+                'author' => Config::get('constants.company_name'),
+                'subject' => '',
+                'keywords' => 'facture',
+                'creator' => Config::get('constants.company_name'),
+                'display_mode' => 'fullpage',
+                'tempDir' => storage_path('app/public/uploads/invoices')
+            ]);
+        $pdf->SetProtection(['copy', 'modify'], '', $this->password);
+        $pdf->save(storage_path('app/public/uploads/invoices/application_users/') . $invoice_id . '.pdf');
     }
 
     /**
@@ -260,9 +341,11 @@ class InvoicesGenerator
 
         $bankAccount = current($this->mangoPayApi->Users->GetBankAccounts($partner->mango_id));
 
-        // TODO -- Est-ce que le dd ne bloque pas les autres scripts qui vont être mis à la queue ?
+        // TODO -- Est-ce que le dd ne bloque pas les autres scripts qui vont être mis à la queue ? SI!
         if ($bankAccount === false) {
-            dd('Aucun compte n\'est renseigné pour ce partenaire.');
+            Session::flash('error', 'Aucun compte n\'est renseigné pour ce partenaire .');
+            return false;
+            //dd('Aucun compte n\'est renseigné pour ce partenaire.');
         }
 
         /**
@@ -390,7 +473,6 @@ class InvoicesGenerator
                             $VAT_order = $this->VATCalculator->get_vat_amount_from_ttc_and_tax(($order['itemPrice'] * $order['quantity']), $order['tax']);
                         }
                     }
-                    //TODO -- Je ne comprend plus mais je pense qu'il y a une erreur.
                     $refund_vat += $refund['amount'] / $total_TTC_order * $VAT_order;
                     $refund_comission += $orderInfo['fees'] * $refund['amount'] / 100;
                 }
@@ -409,7 +491,6 @@ class InvoicesGenerator
             }
             $invoice_id = 'P' . Carbon::now()->year . '-' . str_pad($last_insert_id, 5, "0", STR_PAD_LEFT);
         } while (!$this->partnerInvoice->where('invoice_id', '=', $invoice_id)->get()->isEmpty());
-
 
         /**
          * Enregistre les information de la facture dans la base de données.

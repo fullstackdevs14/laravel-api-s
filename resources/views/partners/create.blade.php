@@ -130,9 +130,7 @@
 
 @section('script')
     <script src="{{ asset('js/jquery.geocomplete.min.js') }}"></script>
-
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUQjZbt7JKZR9PZ3uYNdfMZg2f-6WnMk0&signed-in=true&libraries=places"></script>
-
     <script type="text/javascript">
         //Geocompletion
         $('#gaddress').geocomplete({

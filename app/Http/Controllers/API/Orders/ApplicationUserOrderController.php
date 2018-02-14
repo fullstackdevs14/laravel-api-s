@@ -338,7 +338,7 @@ class ApplicationUserOrderController extends Controller
         event(new OrderEvent(['orders' => $orders, 'partner_id' => $partner->id]));
 
         return response()->json([
-            'message' => 'Commande réussie ! Celle-ci est maintenant en attente de validation par le barman. Si elle n\'est pas validée dans les ' . CheckOrders::TIME_TO_LIVE_FOR_ORDERS . ' min, elle sera automatiquement annulée !',
+            'message' => 'Commande réussie ! Celle-ci est maintenant en attente de validation par le barman. Si elle n\'est pas validée dans les ' . CheckOrders::TIME_TO_LIVE_FOR_ORDERS . ' min, elle sera automatiquement annulée ! Dès sa validation vous allez recevoir une nouvelle notification.',
         ], 200);
     }
 
@@ -621,7 +621,7 @@ class ApplicationUserOrderController extends Controller
         }
         if ($orderInfoShareBill->accepted == true) {
             return response()->json([
-                'error' => 'Il semble qu\'il y ait une erreur puisque cette demande de partage a déjà été validée :/',
+                'error' => 'Il semble qu\'il y ait une erreur puisque cette demande de partage a déjà été validée.',
             ], 422);
         }
 
@@ -638,7 +638,7 @@ class ApplicationUserOrderController extends Controller
         $result = $this->FCMNotificationsHandler->sendNotificationToSpecificUser(
             $this->applicationUser->findOrFail($orderInfoShareBill->applicationUser_id_1),
             'Partage accepté',
-            'Votre demande de partager une note a bien été acceptée. Le bar va recevoir votre commande.',
+            'Votre demande de partager une note a bien été acceptée. Le partenaire va recevoir votre commande.',
             'default',
             0,
             null);

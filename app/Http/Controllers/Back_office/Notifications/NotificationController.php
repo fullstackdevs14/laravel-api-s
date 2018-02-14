@@ -6,10 +6,12 @@ use App\ApplicationUser;
 use App\ApplicationUserNotificationToken;
 use App\Handlers\FCMNotifications\FCMNotificationsHandler;
 use App\Http\Controllers\Controller;
+use App\NotificationChecker;
 use App\OrderInfo;
 use App\Partner;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Validation\Rule;
 use Session;
 
@@ -52,24 +54,34 @@ class NotificationController extends Controller
     private $FCMNotificationsHandler;
 
     /**
+     * C'est model.
+     *
+     * @var NotificationChecker
+     */
+    private $notificationChecker;
+
+    /**
      * NotificationController constructor.
      * @param Partner $partner
      * @param OrderInfo $orderInfo
      * @param ApplicationUser $applicationUser
      * @param FCMNotificationsHandler $FCMNotificationsHandler
+     * @param NotificationChecker $notificationChecker
      */
     public function __construct
     (
         Partner $partner,
         OrderInfo $orderInfo,
         ApplicationUser $applicationUser,
-        FCMNotificationsHandler $FCMNotificationsHandler
+        FCMNotificationsHandler $FCMNotificationsHandler,
+        NotificationChecker $notificationChecker
     )
     {
         $this->partner = $partner;
         $this->orderInfo = $orderInfo;
         $this->applicationUser = $applicationUser;
         $this->FCMNotificationsHandler = $FCMNotificationsHandler;
+        $this->notificationChecker = $notificationChecker;
     }
 
     /**
@@ -281,6 +293,22 @@ class NotificationController extends Controller
         Session::flash('message', "Notifications envoyées !");
 
         return view('notifications.infos', compact('response'));
+    }
+
+    public function listNotificationsStatus
+    (
+        Request $request
+    )
+    {
+        $notifications = $this->notificationChecker->where(function ($query) use ($request) {
+            if (($search = $request->get('search'))) {
+                $query->orWhere('id', 'like', '%' . $search . '%');
+            }
+        })->orderBy('created_at', 'desc')->paginate(15);
+
+        $links = $notifications->appends(Input::except('page'))->render();
+
+        return view('list_notifications_status.index', compact('notifications', 'links'));
     }
 
 }

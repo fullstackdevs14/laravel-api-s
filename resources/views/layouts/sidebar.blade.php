@@ -145,6 +145,11 @@
                                     {{ link_to_route('targeted_user.notification.form', 'Notifier un utilisateur ciblé') }}
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    {{ link_to_route('list_notifications_status.index', 'List des status des notifications concernant les commandes (30 jours)') }}
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
