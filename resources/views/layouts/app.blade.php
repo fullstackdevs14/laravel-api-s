@@ -124,7 +124,7 @@
 
 </div>
 
-<!-- Scripts -->
+<!--Si retiré provoque des bugs-->
 <script src="{{ asset('js/app.js') }}"></script>
 
 <!-- Minified JavaScript -->
@@ -136,6 +136,8 @@
 <!-- Minified JavaScript for select -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
+<!--Si retiré provoque des bugs-->
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 
 @yield('script')
