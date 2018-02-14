@@ -64,7 +64,7 @@ class PartnerRequest extends FormRequest
                     'lng' => 'required|numeric',
 
                     'gaddress_representative' => 'required|string',
-                    'street_number_representative' => 'required',
+                    'street_number_representative' => '',
                     'route_representative' => 'required',
                     'postalCode_representative' => 'required|max:255',
                     'city_representative' => 'required|max:255',
@@ -72,7 +72,7 @@ class PartnerRequest extends FormRequest
                     'country_representative' => 'required|exists:countries,isoAlpha2Code',
 
                     'gaddress_hq' => 'required|string',
-                    'street_number_hq' => 'required',
+                    'street_number_hq' => '',
                     'route_hq' => 'required',
                     'postalCode_hq' => 'required|max:255',
                     'city_hq' => 'required|max:255',

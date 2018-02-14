@@ -211,11 +211,11 @@ class PartnerController extends Controller
             $request['postalCode'],
             $request['lat'],
             $request['lng'],
+            $filename,
             $request['website'],
             $mango->Id,
             null,
-            $request['fees'],
-            $filename
+            $request['fees']
         );
 
         $this->partnerOpeningsRepository->createDefaultOpenings($partner->id);
@@ -341,7 +341,7 @@ class PartnerController extends Controller
     )
     {
         $partner = $this->partner->findOrFail($partner_id);
-        if(env('MANGOPAY_ENV') == "PRODUCTION"){
+        if (env('MANGOPAY_ENV') == "PRODUCTION") {
             return redirect('https://dashboard.mangopay.com/Users/' . $partner->mango_id);
         } else {
             return redirect('https://dashboard.sandbox.mangopay.com/Users/' . $partner->mango_id);

@@ -50,6 +50,52 @@ class PartnerRepository
         return $partner;
     }
 
+    public function newPartner
+    (
+        $email,
+        $tel,
+        $ownerFirstName,
+        $ownerLastName,
+        $password,
+        $name,
+        $category,
+        $address,
+        $city,
+        $postalCode,
+        $lat,
+        $lng,
+        $pictureFileName,
+        $website,
+        $mango_id,
+        $mango_bank_id,
+        $fees
+    )
+    {
+        $partner = $this->partner->create([
+            'email' => $email,
+            'tel' => $tel,
+            'ownerFirstName' => $ownerFirstName,
+            'ownerLastName' => $ownerLastName,
+            'password' => $password,
+            'name' => $name,
+            'category' => $category,
+            'address' => $address,
+            'city' => $city,
+            'postalCode' => $postalCode,
+            'lat' => $lat,
+            'lng' => $lng,
+            'picture' => $pictureFileName,
+            'website' => $website,
+            'mango_id' => $mango_id,
+            'mango_bank_id' => $mango_bank_id,
+            'fess' => $fees
+
+        ]);
+        $partner->save();
+
+        return $partner;
+    }
+
     /**
      * Cette fonction met à jour un partenaire.
      *
