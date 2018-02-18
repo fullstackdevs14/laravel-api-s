@@ -56,8 +56,8 @@
   array (
     'name' => 'ApplicationAdmin',
     'env' => 'production',
-    'debug' => true,
-    'url' => 'https://www.vps.sipper.pro',
+    'debug' => false,
+    'url' => 'http://localhost',
     'timezone' => 'Europe/Paris',
     'locale' => 'fr',
     'fallback_locale' => 'fr',
@@ -107,6 +107,7 @@
       37 => 'Cviebrock\\LaravelMangopay\\ServiceProvider',
       38 => 'Intervention\\Validation\\ValidationServiceProvider',
       39 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
+      40 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
     ),
     'aliases' => 
     array (
@@ -152,6 +153,7 @@
       'FCM' => 'LaravelFCM\\Facades\\FCM',
       'FCMGroup' => 'LaravelFCM\\Facades\\FCMGroup',
       'PDF' => 'niklasravnsborg\\LaravelPdf\\Facades\\Pdf',
+      'NoCaptcha' => 'Anhskohbo\\NoCaptcha\\Facades\\NoCaptcha',
     ),
   ),
   'mail' => 
@@ -173,7 +175,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => '/Users/thomasbourcy/Documents/Sipper/sipper_api/resources/views/vendor/mail',
+        0 => '/var/www/resources/views/vendor/mail',
       ),
     ),
   ),
@@ -221,11 +223,11 @@
       'mysql' => 
       array (
         'driver' => 'mysql',
-        'host' => '127.0.0.1',
+        'host' => '35.195.93.139',
         'port' => '3306',
         'database' => 'sipperbdd',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'sipper_app',
+        'password' => '|F383xye20_yyFkGmT8=t2b!(|[3nwM^H;`Cx15l',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -236,11 +238,11 @@
       'pgsql' => 
       array (
         'driver' => 'pgsql',
-        'host' => '127.0.0.1',
+        'host' => '35.195.93.139',
         'port' => '3306',
         'database' => 'sipperbdd',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'sipper_app',
+        'password' => '|F383xye20_yyFkGmT8=t2b!(|[3nwM^H;`Cx15l',
         'charset' => 'utf8',
         'prefix' => '',
         'schema' => 'public',
@@ -282,7 +284,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/framework/cache/data',
+        'path' => '/var/www/storage/framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -320,7 +322,7 @@
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/framework/sessions',
+    'files' => '/var/www/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -579,7 +581,7 @@
   ),
   'constants' => 
   array (
-    'debug' => true,
+    'debug' => false,
     'test' => true,
     'base_url' => 'https://vps.sipper.pro/',
     'base_url_application_user' => 'https://vps.sipper.pro/storage/uploads/application_users_img/',
@@ -614,7 +616,7 @@
         'host' => 'localhost',
         'port' => 11211,
       ),
-      'dir' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/cache',
+      'dir' => '/var/www/storage/cache',
     ),
     'properties' => 
     array (
@@ -680,7 +682,7 @@
       ),
       'store' => 
       array (
-        'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/exports',
+        'path' => '/var/www/storage/exports',
         'returnInfo' => false,
       ),
       'pdf' => 
@@ -690,15 +692,15 @@
         array (
           'DomPDF' => 
           array (
-            'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/dompdf/dompdf/',
+            'path' => '/var/www/vendor/dompdf/dompdf/',
           ),
           'tcPDF' => 
           array (
-            'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/tecnick.com/tcpdf/',
+            'path' => '/var/www/vendor/tecnick.com/tcpdf/',
           ),
           'mPDF' => 
           array (
-            'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/mpdf/mpdf/',
+            'path' => '/var/www/vendor/mpdf/mpdf/',
           ),
         ),
       ),
@@ -894,7 +896,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/debugbar',
+      'path' => '/var/www/storage/debugbar',
       'connection' => NULL,
       'provider' => '',
     ),
@@ -969,9 +971,9 @@
   array (
     'paths' => 
     array (
-      0 => '/Users/thomasbourcy/Documents/Sipper/sipper_api/resources/views',
+      0 => '/var/www/resources/views',
     ),
-    'compiled' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/framework/views',
+    'compiled' => '/var/www/storage/framework/views',
   ),
   'scout' => 
   array (
@@ -1061,13 +1063,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/app',
+        'root' => '/var/www/storage/app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/storage/app/public',
-        'url' => 'https://www.vps.sipper.pro/storage',
+        'root' => '/var/www/storage/app/public',
+        'url' => '/storage',
         'visibility' => 'public',
       ),
       's3' => 
@@ -1089,7 +1091,16 @@
     'keywords' => '',
     'creator' => 'Laravel Pdf',
     'display_mode' => 'fullpage',
-    'tempDir' => '/Users/thomasbourcy/Documents/Sipper/sipper_api/vendor/niklasravnsborg/laravel-pdf/src/config../temp/',
+    'tempDir' => '/var/www/vendor/niklasravnsborg/laravel-pdf/src/config../temp/',
+  ),
+  'captcha' => 
+  array (
+    'secret' => '6Lc7CkUUAAAAAJ1dqcZAVJzK3SkzwColIcW85HSz',
+    'sitekey' => '6Lc7CkUUAAAAAPHXR5HQXowMjU5O_7vwx-k48uAo',
+    'options' => 
+    array (
+      'timeout' => 2.0,
+    ),
   ),
   'fcm' => 
   array (

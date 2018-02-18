@@ -41,6 +41,7 @@
     37 => 'Cviebrock\\LaravelMangopay\\ServiceProvider',
     38 => 'Intervention\\Validation\\ValidationServiceProvider',
     39 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
+    40 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
   ),
   'eager' => 
   array (
@@ -68,6 +69,7 @@
     21 => 'ConsoleTVs\\Charts\\ChartsServiceProvider',
     22 => 'Intervention\\Validation\\ValidationServiceProvider',
     23 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
+    24 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
   ),
   'deferred' => 
   array (

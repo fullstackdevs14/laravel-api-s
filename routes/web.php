@@ -16,18 +16,9 @@ Route::get('/documentation', function () {
     //return phpinfo();
     return File::get('/home/thomas/www/api/Documentation/index.html');
 });
-Route::get('/11f2b0fa2f7edc4425a0bc912110fc9f.txt', function () {
-    //return phpinfo();
-    return File::get('/home/thomas/www/11f2b0fa2f7edc4425a0bc912110fc9f.txt');
-});
 
 Route::get('/test', function () {
-    Mail::raw('Sending emails with Mailgun and Laravel is easy!', function ($message) {
-        $message->subject('Mailgun and Laravel are awesome!');
-        $message->from('no-reply@mail.sipper.pro', 'Website Name');
-        $message->to('thomasbourcy@live.com');
-    });
-
+    var_dump(\Illuminate\Support\Facades\Config::get('database'));
 });
 
 Route::get('/', function () {

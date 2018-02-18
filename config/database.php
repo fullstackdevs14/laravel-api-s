@@ -52,6 +52,11 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
+            //'options'   => array(
+            //    PDO::MYSQL_ATTR_SSL_KEY => app_path('database/ssl/client-key.pem'),
+            //    PDO::MYSQL_ATTR_SSL_CERT => app_path('database/ssl/client-cert.pem'),
+            //    PDO::MYSQL_ATTR_SSL_CA =>  app_path('database/ssl/server-ca.pem'),
+            //),
         ],
         
         'pgsql' => [
@@ -64,7 +69,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => 'prefer'
         ],
 
     ],
