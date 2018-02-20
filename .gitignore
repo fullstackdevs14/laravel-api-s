@@ -1,11 +1,15 @@
 storage/framework/views/*
 storage/framework/sessions/*
 
+/laradock/*
+/dockerfile-from-image/
+
 /node_modules
 /public/hot
 /public/storage
 /public/documentation
 /storage/*.key
+/storage/debugbar/
 /vendor
 /.idea
 /.vagrant

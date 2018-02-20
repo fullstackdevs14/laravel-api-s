@@ -1,4 +1,4 @@
- <?php
+<?php
 
 return [
 
@@ -50,15 +50,16 @@ return [
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'options' => array(
+                PDO::MYSQL_ATTR_SSL_CA => storage_path('app/ssl/server-ca.pem'),
+                PDO::MYSQL_ATTR_SSL_KEY => storage_path('app/ssl/client-key.pem'),
+                PDO::MYSQL_ATTR_SSL_CERT => storage_path('app/ssl/client-cert.pem'),
+            ),
             'strict' => true,
             'engine' => null,
-            //'options'   => array(
-            //    PDO::MYSQL_ATTR_SSL_KEY => app_path('database/ssl/client-key.pem'),
-            //    PDO::MYSQL_ATTR_SSL_CERT => app_path('database/ssl/client-cert.pem'),
-            //    PDO::MYSQL_ATTR_SSL_CA =>  app_path('database/ssl/server-ca.pem'),
-            //),
         ],
-        
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

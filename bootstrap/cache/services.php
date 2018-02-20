@@ -42,6 +42,7 @@
     38 => 'Intervention\\Validation\\ValidationServiceProvider',
     39 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
     40 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
+    41 => 'Superbalist\\LaravelGoogleCloudStorage\\GoogleCloudStorageServiceProvider',
   ),
   'eager' => 
   array (
@@ -70,6 +71,7 @@
     22 => 'Intervention\\Validation\\ValidationServiceProvider',
     23 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
     24 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
+    25 => 'Superbalist\\LaravelGoogleCloudStorage\\GoogleCloudStorageServiceProvider',
   ),
   'deferred' => 
   array (

@@ -189,10 +189,9 @@ return [
         Cviebrock\LaravelMangopay\ServiceProvider::class,
 
         Intervention\Validation\ValidationServiceProvider::class,
-
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
-
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+        Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
     ],
 
     /*

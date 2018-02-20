@@ -56,7 +56,7 @@
   array (
     'name' => 'ApplicationAdmin',
     'env' => 'production',
-    'debug' => false,
+    'debug' => true,
     'url' => 'http://localhost',
     'timezone' => 'Europe/Paris',
     'locale' => 'fr',
@@ -108,6 +108,7 @@
       38 => 'Intervention\\Validation\\ValidationServiceProvider',
       39 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
       40 => 'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider',
+      41 => 'Superbalist\\LaravelGoogleCloudStorage\\GoogleCloudStorageServiceProvider',
     ),
     'aliases' => 
     array (
@@ -175,7 +176,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => '/var/www/resources/views/vendor/mail',
+        0 => '/var/www/html/resources/views/vendor/mail',
       ),
     ),
   ),
@@ -183,8 +184,8 @@
   array (
     'mailgun' => 
     array (
-      'domain' => 'mail.sipper.pro',
-      'secret' => 'key-61b2556772f548fc636185a361704c12',
+      'domain' => NULL,
+      'secret' => NULL,
     ),
     'ses' => 
     array (
@@ -217,7 +218,7 @@
       'sqlite' => 
       array (
         'driver' => 'sqlite',
-        'database' => 'sipperbdd',
+        'database' => 'sipper-1518351638638:europe-west1:sipperbdd',
         'prefix' => '',
       ),
       'mysql' => 
@@ -225,13 +226,20 @@
         'driver' => 'mysql',
         'host' => '35.195.93.139',
         'port' => '3306',
-        'database' => 'sipperbdd',
-        'username' => 'sipper_app',
-        'password' => '|F383xye20_yyFkGmT8=t2b!(|[3nwM^H;`Cx15l',
+        'database' => 'sipper-1518351638638:europe-west1:sipperbdd',
+        'username' => 'root',
+        'password' => '03r%;emrY"VZYL-$k^E6a6}^o0*nRI226Qe,5XG5',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
         'prefix' => '',
+        'sslmode' => 'prefer',
+        'options' => 
+        array (
+          1009 => '/var/www/html/storage/app/ssl/server-ca.pem',
+          1007 => '/var/www/html/storage/app/ssl/client-key.pem',
+          1008 => '/var/www/html/storage/app/ssl/client-cert.pem',
+        ),
         'strict' => true,
         'engine' => NULL,
       ),
@@ -240,9 +248,9 @@
         'driver' => 'pgsql',
         'host' => '35.195.93.139',
         'port' => '3306',
-        'database' => 'sipperbdd',
-        'username' => 'sipper_app',
-        'password' => '|F383xye20_yyFkGmT8=t2b!(|[3nwM^H;`Cx15l',
+        'database' => 'sipper-1518351638638:europe-west1:sipperbdd',
+        'username' => 'root',
+        'password' => '03r%;emrY"VZYL-$k^E6a6}^o0*nRI226Qe,5XG5',
         'charset' => 'utf8',
         'prefix' => '',
         'schema' => 'public',
@@ -255,7 +263,7 @@
       'client' => 'predis',
       'default' => 
       array (
-        'host' => '127.0.0.1',
+        'host' => 'redis',
         'password' => NULL,
         'port' => '6379',
         'database' => 0,
@@ -284,7 +292,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/var/www/storage/framework/cache/data',
+        'path' => '/var/www/html/storage/framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -322,7 +330,7 @@
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/var/www/storage/framework/sessions',
+    'files' => '/var/www/html/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -581,7 +589,7 @@
   ),
   'constants' => 
   array (
-    'debug' => false,
+    'debug' => true,
     'test' => true,
     'base_url' => 'https://vps.sipper.pro/',
     'base_url_application_user' => 'https://vps.sipper.pro/storage/uploads/application_users_img/',
@@ -616,7 +624,7 @@
         'host' => 'localhost',
         'port' => 11211,
       ),
-      'dir' => '/var/www/storage/cache',
+      'dir' => '/var/www/html/storage/cache',
     ),
     'properties' => 
     array (
@@ -682,7 +690,7 @@
       ),
       'store' => 
       array (
-        'path' => '/var/www/storage/exports',
+        'path' => '/var/www/html/storage/exports',
         'returnInfo' => false,
       ),
       'pdf' => 
@@ -692,15 +700,15 @@
         array (
           'DomPDF' => 
           array (
-            'path' => '/var/www/vendor/dompdf/dompdf/',
+            'path' => '/var/www/html/vendor/dompdf/dompdf/',
           ),
           'tcPDF' => 
           array (
-            'path' => '/var/www/vendor/tecnick.com/tcpdf/',
+            'path' => '/var/www/html/vendor/tecnick.com/tcpdf/',
           ),
           'mPDF' => 
           array (
-            'path' => '/var/www/vendor/mpdf/mpdf/',
+            'path' => '/var/www/html/vendor/mpdf/mpdf/',
           ),
         ),
       ),
@@ -896,7 +904,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => '/var/www/storage/debugbar',
+      'path' => '/var/www/html/storage/debugbar',
       'connection' => NULL,
       'provider' => '',
     ),
@@ -971,9 +979,9 @@
   array (
     'paths' => 
     array (
-      0 => '/var/www/resources/views',
+      0 => '/var/www/html/resources/views',
     ),
-    'compiled' => '/var/www/storage/framework/views',
+    'compiled' => '/var/www/html/storage/framework/views',
   ),
   'scout' => 
   array (
@@ -1063,12 +1071,12 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/storage/app',
+        'root' => '/var/www/html/storage/app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/storage/app/public',
+        'root' => '/var/www/html/storage/app/public',
         'url' => '/storage',
         'visibility' => 'public',
       ),
@@ -1079,6 +1087,15 @@
         'secret' => NULL,
         'region' => NULL,
         'bucket' => NULL,
+      ),
+      'gcs' => 
+      array (
+        'driver' => 'gcs',
+        'project_id' => '773156839327',
+        'key_file' => '',
+        'bucket' => 'sipper_app',
+        'path_prefix' => '',
+        'storage_api_uri' => 'sipper.pro',
       ),
     ),
   ),
@@ -1091,7 +1108,7 @@
     'keywords' => '',
     'creator' => 'Laravel Pdf',
     'display_mode' => 'fullpage',
-    'tempDir' => '/var/www/vendor/niklasravnsborg/laravel-pdf/src/config../temp/',
+    'tempDir' => '/var/www/html/vendor/niklasravnsborg/laravel-pdf/src/config../temp/',
   ),
   'captcha' => 
   array (
@@ -1108,8 +1125,8 @@
     'log_enabled' => false,
     'http' => 
     array (
-      'server_key' => 'AAAAxgzuH4Y:APA91bEoeaegLlzzCnYjgFH93fpBUi36jaDJgUUjGakIEhbnFoatZTu7D1_UY6z21ZXlBPOpkRI55F8udvM3NnNdFR-qfGtejCizBN17bup7ynuheo7wnHUA5-YbZxhOBwAf5BNd_zK4',
-      'sender_id' => '850620456838',
+      'server_key' => 'AAAAtAO9H58:APA91bEagGP8r1tGlY4AO-1MVg80ZOJgiU_BO49j4z8pnON9cpGFUs0Mij8N7BOtAM1NfxV6g7ladQfxdYuCDlj5BIB-LdvH4_StVsaO5CkN5zR2g3PfehlCrYu4ndFCIrrT78Jes4fF',
+      'sender_id' => '773156839327',
       'server_send_url' => 'https://fcm.googleapis.com/fcm/send',
       'server_group_url' => 'https://android.googleapis.com/gcm/notification',
       'timeout' => 30.0,
