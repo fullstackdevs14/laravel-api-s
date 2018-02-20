@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Lancement du demarrage";
+
+sudo docker-compose run --rm node npm install;
+sudo docker-compose run --rm npm install - g laravel-echo server;
+
+sudo docker-compose up;
+
+echo "Fin du demarrage";
